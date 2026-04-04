@@ -1,7 +1,7 @@
 <!--suppress HtmlDeprecatedAttribute -->
 <h1 align="center">
   <br>
-  <a href="https://www.stackd-solutions.io"><img src="docs/logo.svg" alt="StackD Solutions" width="250"></a>
+  <a href="https://www.stackd-solutions.io"><img src="https://raw.githubusercontent.com/StackD-Solutions/medusa-wishlist/main/docs/logo.svg" alt="StackD Solutions" width="250"></a>
   <br>Medusa Wishlist Plugin
   <br>
 </h1>
