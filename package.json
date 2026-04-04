@@ -1,0 +1,81 @@
+{
+	"name": "@stackd-solutions/medusa-wishlist",
+	"version": "0.1.0",
+	"description": "Wishlist plugin for Medusa",
+	"author": "StackD Solutions (https://stackd-solutions.io)",
+	"license": "Apache-2.0",
+	"main": "./.medusa/server/src/index.js",
+	"types": "./.medusa/types/index.d.ts",
+	"files": [
+		".medusa/server",
+		".medusa/types"
+	],
+	"exports": {
+		".": {
+			"types": "./.medusa/types/index.d.ts",
+			"import": "./.medusa/server/src/index.js",
+			"require": "./.medusa/server/src/index.js",
+			"default": "./.medusa/server/src/index.js"
+		},
+		"./package.json": "./package.json",
+		"./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
+		"./modules/*": "./.medusa/server/src/modules/*/index.js",
+		"./*": "./.medusa/server/src/*.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/StackD-Solutions/medusa-wishlist.git"
+	},
+	"keywords": [
+		"medusa",
+		"medusa-plugin",
+		"wishlist",
+		"ecommerce"
+	],
+	"scripts": {
+		"build": "medusa plugin:build && yarn build:types",
+		"build:types": "tsc --project tsconfig.types.json",
+		"dev": "medusa plugin:develop",
+		"lint": "eslint src --ext .ts",
+		"fix:prettier": "prettier --write .",
+		"test": "jest",
+		"test:coverage": "jest --coverage"
+	},
+	"peerDependencies": {
+		"@medusajs/framework": "^2.13.5",
+		"@medusajs/medusa": "^2.13.5"
+	},
+	"devDependencies": {
+		"@medusajs/admin-sdk": "2.13.5",
+		"@medusajs/admin-shared": "2.13.5",
+		"@medusajs/cli": "2.13.5",
+		"@medusajs/framework": "2.13.5",
+		"@medusajs/medusa": "2.13.5",
+		"@medusajs/ui": "^4.0.0",
+		"@swc/core": "^1.15.21",
+		"@swc/jest": "^0.2.39",
+		"@types/jest": "^30.0.0",
+		"@types/jsonwebtoken": "^9",
+		"@types/node": "^20.12.11",
+		"@types/react": "^18.3.2",
+		"@types/react-dom": "^18.2.25",
+		"eslint": "^10.1.0",
+		"jest": "^30.3.0",
+		"jsonwebtoken": "^9.0.0",
+		"prettier": "^3",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.6.2",
+		"vite": "^5.4.14",
+		"zod": "^3.24.4"
+	},
+	"engines": {
+		"node": ">=20"
+	},
+	"packageManager": "yarn@4.13.0",
+	"publishConfig": {
+		"access": "public"
+	}
+}

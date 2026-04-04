@@ -1,0 +1,390 @@
+{
+	"info": {
+		"name": "Medusa Wishlist",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:9000"
+		},
+		{
+			"key": "publishable_api_key",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "Store",
+			"item": [
+				{
+					"name": "List wishlists",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists?limit=10&offset=0",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						]
+					}
+				},
+				{
+					"name": "Create wishlist",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists"]
+						},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"My Wishlist\",\n  \"sales_channel_id\": \"<sales_channel_id>\"\n}"
+						}
+					}
+				},
+				{
+					"name": "Retrieve wishlist",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							}
+						]
+					}
+				},
+				{
+					"name": "Update wishlist",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Name\"\n}"
+						}
+					}
+				},
+				{
+					"name": "Delete wishlist",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						]
+					}
+				},
+				{
+					"name": "List wishlist items",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id/items?limit=10&offset=0",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id", "items"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							}
+						]
+					}
+				},
+				{
+					"name": "Add item to wishlist",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id/items",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id", "items"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_variant_id\": \"<variant_id>\"\n}"
+						}
+					}
+				},
+				{
+					"name": "Remove item from wishlist",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id/items/:item_id",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id", "items", ":item_id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								},
+								{
+									"key": "item_id",
+									"value": "<item_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							}
+						]
+					}
+				},
+				{
+					"name": "Share wishlist",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id/share",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id", "share"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							}
+						]
+					}
+				},
+				{
+					"name": "Import shared wishlist",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/import",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", "import"]
+						},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"share_token\": \"<share_token>\"\n}"
+						}
+					}
+				},
+				{
+					"name": "Transfer guest wishlist",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/:id/transfer",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", ":id", "transfer"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<wishlist_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						]
+					}
+				},
+				{
+					"name": "Get total items count",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/store/wishlists/total-items-count",
+							"host": ["{{base_url}}"],
+							"path": ["store", "wishlists", "total-items-count"],
+							"query": [
+								{
+									"key": "wishlist_id",
+									"value": "<wishlist_id>",
+									"disabled": true
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "x-publishable-api-key",
+								"value": "{{publishable_api_key}}"
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get product wishlist count",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/admin/products/:id/wishlist",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "products", ":id", "wishlist"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<product_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						]
+					}
+				}
+			]
+		}
+	]
+}
