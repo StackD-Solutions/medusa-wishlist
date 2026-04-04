@@ -70,15 +70,15 @@ npx medusa db:migrate
 
 ### Plugin Options
 
-| Option                     | Type       | Default            | Description                                     |
-| -------------------------- | ---------- | ------------------ | ----------------------------------------------- |
-| `allowGuestWishlist`       | `boolean`  | `false`            | Allow unauthenticated users to create wishlists |
-| `shareTokenSecret`         | `string`   | **required**        | Secret key for signing share tokens             |
-| `shareTokenExpiryDays`     | `number`   | `7`                 | Number of days before share tokens expire       |
-| `includeWishlistItems`     | `boolean`  | `false`            | Include items when listing wishlists            |
-| `includeWishlistItemsTake` | `number`   | `5`                | Max items to include per wishlist in list view  |
-| `wishlistFields`           | `string[]` | -                  | Fields to include on wishlist queries           |
-| `wishlistItemsFields`      | `string[]` | -                  | Fields to include on item queries               |
+| Option                     | Type       | Default        | Description                                     |
+| -------------------------- | ---------- | -------------- | ----------------------------------------------- |
+| `allowGuestWishlist`       | `boolean`  | `false`        | Allow unauthenticated users to create wishlists |
+| `shareTokenSecret`         | `string`   | ➖             | Secret key for signing share tokens             |
+| `shareTokenExpiryDays`     | `number`   | `7`            | Number of days before share tokens expire       |
+| `includeWishlistItems`     | `boolean`  | `false`        | Include items when listing wishlists            |
+| `includeWishlistItemsTake` | `number`   | `5`            | Max items to include per wishlist in list view  |
+| `wishlistFields`           | `string[]` | ➖             | Fields to include on wishlist queries           |
+| `wishlistItemsFields`      | `string[]` | ➖             | Fields to include on item queries               |
 
 ## API Endpoints
 
