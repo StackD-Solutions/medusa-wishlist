@@ -1,0 +1,616 @@
+openapi: 3.2.0
+info:
+ title: Medusa Wishlist API
+ description: API for wishlist management in Medusa stores
+ version: 0.1.0
+servers:
+ - url: http://localhost:9000
+   description: Local Medusa server
+paths:
+ /store/wishlists:
+  get:
+   summary: List wishlists
+   description: Returns a paginated list of wishlists for the authenticated customer
+   operationId: listWishlists
+   tags:
+    - Wishlists
+   parameters:
+    - name: limit
+      in: query
+      schema:
+       type: integer
+       default: 10
+    - name: offset
+      in: query
+      schema:
+       type: integer
+       default: 0
+    - name: items_fields
+      in: query
+      schema:
+       type: array
+       items:
+        type: string
+   responses:
+    '200':
+     description: Paginated list of wishlists
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/PaginatedWishlistResponse'
+    '401':
+     description: Unauthorized
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+  post:
+   summary: Create wishlist
+   description: Creates a new wishlist. Authentication is optional if guest wishlists are enabled.
+   operationId: createWishlist
+   tags:
+    - Wishlists
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/CreateWishlistRequest'
+   responses:
+    '201':
+     description: Wishlist created
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Wishlist'
+    '400':
+     description: Invalid request body
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+    '401':
+     description: Unauthorized and guest wishlists are disabled
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /store/wishlists/{id}:
+  get:
+   summary: Retrieve wishlist
+   description: Returns a single wishlist with its items
+   operationId: retrieveWishlist
+   tags:
+    - Wishlists
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+    - name: items_fields
+      in: query
+      schema:
+       type: array
+       items:
+        type: string
+    - name: include_inventory_count
+      in: query
+      schema:
+       type: boolean
+    - name: include_calculated_price
+      in: query
+      schema:
+       type: boolean
+   responses:
+    '200':
+     description: Wishlist with items
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Wishlist'
+    '403':
+     description: Not authorized to access this wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+  put:
+   summary: Update wishlist
+   description: Updates wishlist metadata
+   operationId: updateWishlist
+   tags:
+    - Wishlists
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/UpdateWishlistRequest'
+   responses:
+    '200':
+     description: Updated wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Wishlist'
+    '400':
+     description: Invalid request body
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+    '403':
+     description: Not authorized to update this wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+  delete:
+   summary: Delete wishlist
+   description: Deletes a wishlist
+   operationId: deleteWishlist
+   tags:
+    - Wishlists
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+   responses:
+    '200':
+     description: Deleted wishlist ID
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/DeleteResponse'
+    '403':
+     description: Not authorized to delete this wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /store/wishlists/{id}/items:
+  get:
+   summary: List wishlist items
+   description: Returns a paginated list of items in a wishlist
+   operationId: listWishlistItems
+   tags:
+    - Wishlist Items
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+    - name: limit
+      in: query
+      schema:
+       type: integer
+       default: 10
+    - name: offset
+      in: query
+      schema:
+       type: integer
+       default: 0
+   responses:
+    '200':
+     description: Paginated list of wishlist items
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/PaginatedWishlistItemResponse'
+    '403':
+     description: Not authorized to access this wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+  post:
+   summary: Add item to wishlist
+   description: Adds a product variant to a wishlist
+   operationId: addItemToWishlist
+   tags:
+    - Wishlist Items
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/AddItemToWishlistRequest'
+   responses:
+    '201':
+     description: Item added to wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/WishlistItem'
+    '404':
+     description: Product variant not found
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+    '409':
+     description: Item already in wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /store/wishlists/{id}/items/{item_id}:
+  delete:
+   summary: Remove item from wishlist
+   description: Removes an item from a wishlist
+   operationId: removeItemFromWishlist
+   tags:
+    - Wishlist Items
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+    - name: item_id
+      in: path
+      required: true
+      schema:
+       type: string
+   responses:
+    '200':
+     description: Removed item ID
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/DeleteResponse'
+    '403':
+     description: Not authorized to modify this wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /store/wishlists/{id}/share:
+  post:
+   summary: Generate share token
+   description: Generates a JWT share token for a wishlist
+   operationId: generateShareToken
+   tags:
+    - Wishlist Sharing
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+   responses:
+    '200':
+     description: Share token generated
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/ShareTokenResponse'
+    '403':
+     description: Not authorized to share this wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /store/wishlists/{id}/transfer:
+  post:
+   summary: Transfer guest wishlist
+   description: Transfers ownership of a guest wishlist to the authenticated customer
+   operationId: transferWishlist
+   tags:
+    - Wishlists
+   parameters:
+    - $ref: '#/components/parameters/WishlistId'
+   responses:
+    '200':
+     description: Wishlist transferred
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Wishlist'
+    '400':
+     description: Wishlist is already owned by a customer
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+    '404':
+     description: Wishlist not found
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /store/wishlists/import:
+  post:
+   summary: Import shared wishlist
+   description: Creates a copy of a shared wishlist using a share token
+   operationId: importWishlist
+   tags:
+    - Wishlist Sharing
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/ImportWishlistRequest'
+   responses:
+    '201':
+     description: Wishlist imported
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Wishlist'
+    '400':
+     description: Invalid or expired share token
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+    '404':
+     description: Shared wishlist no longer exists
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /store/wishlists/total-items-count:
+  get:
+   summary: Get total items count
+   description: Returns the total number of items across wishlists for the authenticated customer
+   operationId: getTotalItemsCount
+   tags:
+    - Wishlists
+   parameters:
+    - name: wishlist_id
+      in: query
+      description: Optionally scope the count to a single wishlist
+      schema:
+       type: string
+   responses:
+    '200':
+     description: Total items count
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/TotalItemsCountResponse'
+    '401':
+     description: Unauthorized
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+    '403':
+     description: Not authorized to access the specified wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+ /admin/products/{id}/wishlist:
+  get:
+   summary: Get product wishlist count
+   description: Returns the number of wishlists containing a product (admin only)
+   operationId: getProductWishlistCount
+   tags:
+    - Admin
+   parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+       type: string
+   responses:
+    '200':
+     description: Wishlist count for the product
+     content:
+      application/json:
+       schema:
+        type: object
+        required:
+         - count
+        properties:
+         count:
+          type: integer
+    '401':
+     description: Unauthorized
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
+components:
+ parameters:
+  WishlistId:
+   name: id
+   in: path
+   required: true
+   schema:
+    type: string
+
+ schemas:
+  Wishlist:
+   type: object
+   required:
+    - id
+    - sales_channel_id
+    - created_at
+    - updated_at
+   properties:
+    id:
+     type: string
+    name:
+     type: string
+     nullable: true
+    customer_id:
+     type: string
+     nullable: true
+    sales_channel_id:
+     type: string
+    created_at:
+     type: string
+     format: date-time
+    updated_at:
+     type: string
+     format: date-time
+    deleted_at:
+     type: string
+     format: date-time
+     nullable: true
+    items:
+     type: array
+     items:
+      $ref: '#/components/schemas/WishlistItem'
+    items_count:
+     type: integer
+
+  WishlistItem:
+   type: object
+   required:
+    - id
+    - product_variant_id
+    - wishlist_id
+    - created_at
+    - updated_at
+   properties:
+    id:
+     type: string
+    product_variant_id:
+     type: string
+    wishlist_id:
+     type: string
+    created_at:
+     type: string
+     format: date-time
+    updated_at:
+     type: string
+     format: date-time
+    deleted_at:
+     type: string
+     format: date-time
+     nullable: true
+    product_variant:
+     type: object
+     nullable: true
+
+  PaginatedWishlistResponse:
+   type: object
+   required:
+    - data
+    - count
+    - skip
+    - take
+    - totalPages
+    - currentPage
+    - nextPage
+    - prevPage
+   properties:
+    data:
+     type: array
+     items:
+      $ref: '#/components/schemas/Wishlist'
+    count:
+     type: integer
+    skip:
+     type: integer
+    take:
+     type: integer
+    totalPages:
+     type: integer
+    currentPage:
+     type: integer
+    nextPage:
+     type: integer
+    prevPage:
+     type: integer
+
+  PaginatedWishlistItemResponse:
+   type: object
+   required:
+    - data
+    - count
+    - skip
+    - take
+    - totalPages
+    - currentPage
+    - nextPage
+    - prevPage
+   properties:
+    data:
+     type: array
+     items:
+      $ref: '#/components/schemas/WishlistItem'
+    count:
+     type: integer
+    skip:
+     type: integer
+    take:
+     type: integer
+    totalPages:
+     type: integer
+    currentPage:
+     type: integer
+    nextPage:
+     type: integer
+    prevPage:
+     type: integer
+
+  CreateWishlistRequest:
+   type: object
+   required:
+    - sales_channel_id
+   properties:
+    name:
+     type: string
+    sales_channel_id:
+     type: string
+
+  UpdateWishlistRequest:
+   type: object
+   properties:
+    name:
+     type: string
+
+  AddItemToWishlistRequest:
+   type: object
+   required:
+    - product_variant_id
+   properties:
+    product_variant_id:
+     type: string
+
+  ImportWishlistRequest:
+   type: object
+   required:
+    - share_token
+   properties:
+    share_token:
+     type: string
+
+  ShareTokenResponse:
+   type: object
+   required:
+    - share_token
+   properties:
+    share_token:
+     type: string
+
+  DeleteResponse:
+   type: object
+   required:
+    - id
+   properties:
+    id:
+     type: string
+
+  TotalItemsCountResponse:
+   type: object
+   required:
+    - total_items_count
+   properties:
+    total_items_count:
+     type: integer
+
+  Error:
+   type: object
+   required:
+    - message
+   properties:
+    message:
+     type: string
+     description: Error message
+    code:
+     type: string
+     description: Error code
