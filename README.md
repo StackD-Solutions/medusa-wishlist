@@ -122,11 +122,15 @@ yarn dev
 import type {
 	Wishlist,
 	WishlistItem,
-	PaginatedOutput,
+	PaginatedWishlistResponse,
+	PaginatedWishlistItemResponse,
 	CreateWishlistRequest,
 	UpdateWishlistRequest,
 	AddItemToWishlistRequest,
 	ImportWishlistRequest,
+	ShareTokenResponse,
+	DeleteResponse,
+	TotalItemsCountResponse,
 	WishlistPluginOptions
 } from '@stackd-solutions/medusa-wishlist'
 ```
