@@ -4,7 +4,7 @@ import type WishlistModuleService from '../../../../modules/wishlist/service'
 import {UpdateWishlistRequestSchema} from '../validators'
 import {requireCustomerId} from '../../../../utils/utils'
 
-export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse) {
+export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
@@ -23,7 +23,7 @@ export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse) 
 	})
 }
 
-export async function PUT(req: AuthenticatedMedusaRequest, res: MedusaResponse) {
+export async function PUT(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
@@ -42,7 +42,7 @@ export async function PUT(req: AuthenticatedMedusaRequest, res: MedusaResponse) 
 	return res.status(200).json(updated)
 }
 
-export async function DELETE(req: AuthenticatedMedusaRequest, res: MedusaResponse) {
+export async function DELETE(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)

@@ -7,7 +7,7 @@ import {buildPaginatedResponse} from '../../../../../utils/default-response'
 import {getCustomerId, requireCustomerId} from '../../../../../utils/utils'
 import {AddItemToWishlistRequestSchema} from '../../validators'
 
-export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse) {
+export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
@@ -27,7 +27,7 @@ export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse) 
 	return res.status(200).json(buildPaginatedResponse(items, count, offset, limit))
 }
 
-export async function POST(req: MedusaRequest, res: MedusaResponse) {
+export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
 	const {id} = req.params
 	const customerId = getCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)

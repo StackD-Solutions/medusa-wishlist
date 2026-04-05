@@ -4,7 +4,7 @@ import type WishlistModuleService from '../../../../modules/wishlist/service'
 import {ImportWishlistRequestSchema} from './validators'
 import {getCustomerId} from '../../../../utils/utils'
 
-export async function POST(req: MedusaRequest, res: MedusaResponse) {
+export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 
 	const parsed = ImportWishlistRequestSchema.safeParse(req.body)

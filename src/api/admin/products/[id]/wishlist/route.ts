@@ -2,7 +2,7 @@ import type {AuthenticatedMedusaRequest, MedusaResponse} from '@medusajs/framewo
 import {WISHLIST_MODULE} from '../../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../../modules/wishlist/service'
 
-export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse) {
+export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
 	const {id} = req.params
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 

@@ -33,8 +33,9 @@
 		"ecommerce"
 	],
 	"scripts": {
-		"build": "medusa plugin:build && yarn build:types",
+		"build": "yarn generate && medusa plugin:build && yarn build:types",
 		"build:types": "tsc --project tsconfig.types.json",
+		"generate": "openapi-typescript docs/openapi.yml -o src/generated/openapi.ts",
 		"dev": "medusa plugin:develop",
 		"lint": "eslint src --ext .ts",
 		"fix:prettier": "prettier --write .",
@@ -65,6 +66,7 @@
 		"@types/react-dom": "^18.2.25",
 		"eslint": "^10.1.0",
 		"jest": "^30.3.0",
+		"openapi-typescript": "^7.13.0",
 		"prettier": "^3",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
