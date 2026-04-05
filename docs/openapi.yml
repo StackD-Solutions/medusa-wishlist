@@ -603,6 +603,32 @@ components:
     total_items_count:
      type: integer
 
+  ListWishlistsQuery:
+   type: object
+   properties:
+    items_fields:
+     type: array
+     items:
+      type: string
+
+  RetrieveWishlistQuery:
+   type: object
+   properties:
+    items_fields:
+     type: array
+     items:
+      type: string
+    include_inventory_count:
+     type: boolean
+    include_calculated_price:
+     type: boolean
+
+  TotalItemsCountQuery:
+   type: object
+   properties:
+    wishlist_id:
+     type: string
+
   Error:
    type: object
    required:
