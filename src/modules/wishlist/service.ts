@@ -44,7 +44,7 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 	}
 
 	async getWishlistCountsOfProduct(productId: string): Promise<number> {
-		const knex = (this as Record<string, any>).__container__?.resolve('__pg_connection__')
+		const knex = (this as Record<string, any>).__container__?.['__pg_connection__']
 		if (!knex) {
 			return 0
 		}
