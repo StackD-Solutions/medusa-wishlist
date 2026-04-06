@@ -3,7 +3,7 @@ import {WISHLIST_MODULE} from '../../../modules/wishlist'
 import type WishlistModuleService from '../../../modules/wishlist/service'
 import {buildPaginatedResponse} from '../../../utils/default-response'
 import {getCustomerId, requireCustomerId} from '../../../utils/utils'
-import type {CreateWishlistBody} from './validators'
+import type {CreateWishlistRequest} from './validators'
 
 export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const customerId = requireCustomerId(req)
@@ -30,7 +30,7 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	return res.status(200).json(buildPaginatedResponse(wishlists, count, offset, limit))
 }
 
-export const POST = async (req: MedusaRequest<CreateWishlistBody>, res: MedusaResponse): Promise<MedusaResponse> => {
+export const POST = async (req: MedusaRequest<CreateWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 	const customerId = getCustomerId(req)
 

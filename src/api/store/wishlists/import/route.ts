@@ -2,9 +2,9 @@ import type {MedusaRequest, MedusaResponse} from '@medusajs/framework/http'
 import {WISHLIST_MODULE} from '../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../modules/wishlist/service'
 import {getCustomerId} from '../../../../utils/utils'
-import type {ImportWishlistBody} from './validators'
+import type {ImportWishlistRequest} from './validators'
 
-export const POST = async (req: MedusaRequest<ImportWishlistBody>, res: MedusaResponse): Promise<MedusaResponse> => {
+export const POST = async (req: MedusaRequest<ImportWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 
 	let decoded: {wishlist_id: string}

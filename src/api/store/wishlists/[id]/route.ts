@@ -2,7 +2,7 @@ import type {AuthenticatedMedusaRequest, MedusaResponse} from '@medusajs/framewo
 import {WISHLIST_MODULE} from '../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../modules/wishlist/service'
 import {requireCustomerId} from '../../../../utils/utils'
-import type {UpdateWishlistBody} from '../validators'
+import type {UpdateWishlistRequest} from '../validators'
 
 export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
@@ -23,7 +23,7 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	})
 }
 
-export const PUT = async (req: AuthenticatedMedusaRequest<UpdateWishlistBody>, res: MedusaResponse): Promise<MedusaResponse> => {
+export const PUT = async (req: AuthenticatedMedusaRequest<UpdateWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
