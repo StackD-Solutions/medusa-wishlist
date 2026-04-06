@@ -98,7 +98,7 @@ npx medusa db:migrate
 | GET    | `/store/wishlists/total-items-count`  | Store | ✅   | Get total items count across wishlists    |
 | GET    | `/admin/products/:id/wishlist`        | Admin | ✅   | Get wishlist count for a product          |
 
-> **Guest access:** When `allowGuestWishlist` is enabled, guests can create one wishlist and add items to it (➖ endpoints). All other operations require a registered customer.
+> **Guest access:** When `allowGuestWishlist` is enabled, guests can create one wishlist and add items to it (- endpoints). All other operations require a registered customer.
 
 ## Admin Widget
 
