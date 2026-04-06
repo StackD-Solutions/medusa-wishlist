@@ -1,8 +1,8 @@
-import type {AuthenticatedMedusaRequest, MedusaRequest, MedusaResponse} from '@medusajs/framework/http'
+import type {AuthenticatedMedusaRequest, MedusaResponse} from '@medusajs/framework/http'
 import {WISHLIST_MODULE} from '../../../modules/wishlist'
 import type WishlistModuleService from '../../../modules/wishlist/service'
 import {buildPaginatedResponse} from '../../../utils/default-response'
-import {getCustomerId, requireCustomerId} from '../../../utils/utils'
+import {requireCustomerId} from '../../../utils/utils'
 import type {CreateWishlistRequest} from './validators'
 
 export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
@@ -30,13 +30,9 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	return res.status(200).json(buildPaginatedResponse(wishlists, count, offset, limit))
 }
 
-export const POST = async (req: MedusaRequest<CreateWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
+export const POST = async (req: AuthenticatedMedusaRequest<CreateWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
+	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
-	const customerId = getCustomerId(req)
-
-	if (!customerId && !wishlistService.allowGuestWishlist) {
-		return res.status(401).json({message: 'Authentication required'})
-	}
 
 	const wishlist = await wishlistService.createWishlists({
 		...req.body,

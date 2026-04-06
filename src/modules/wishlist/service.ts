@@ -12,7 +12,6 @@ const PluginOptionsSchema = z.object({
 	wishlistItemsFields: z.array(z.string()).optional(),
 	includeWishlistItems: z.boolean().default(false),
 	includeWishlistItemsTake: z.number().default(5),
-	allowGuestWishlist: z.boolean().default(false),
 	shareTokenSecret: z.string().min(1),
 	shareTokenExpiryDays: z.number().default(7)
 })
@@ -29,10 +28,6 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 
 	private validateOptions(options: Record<string, unknown>): WishlistPluginOptions {
 		return PluginOptionsSchema.parse(options)
-	}
-
-	get allowGuestWishlist(): boolean {
-		return this.pluginOptions_.allowGuestWishlist
 	}
 
 	get includeWishlistItems(): boolean {

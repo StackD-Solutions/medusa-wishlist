@@ -3,14 +3,11 @@ import {CreateWishlistRequestSchema, UpdateWishlistRequestSchema, AddItemToWishl
 import {ImportWishlistRequestSchema} from './store/wishlists/import/validators'
 
 const customerAuth = authenticate('customer', ['session', 'bearer'])
-const guestAuth = authenticate('customer', ['session', 'bearer'], {allowUnregistered: true})
 
 export default defineMiddlewares({
 	routes: [
-		// Guest-allowed routes (create wishlist, add items)
-		{matcher: '/store/wishlists', method: 'POST', middlewares: [guestAuth, validateAndTransformBody(CreateWishlistRequestSchema)]},
-		{matcher: '/store/wishlists/:id/items', method: 'POST', middlewares: [guestAuth, validateAndTransformBody(AddItemToWishlistRequestSchema)]},
-		// Authenticated customer routes
+		{matcher: '/store/wishlists', method: 'POST', middlewares: [customerAuth, validateAndTransformBody(CreateWishlistRequestSchema)]},
+		{matcher: '/store/wishlists/:id/items', method: 'POST', middlewares: [customerAuth, validateAndTransformBody(AddItemToWishlistRequestSchema)]},
 		{matcher: '/store/wishlists', method: 'GET', middlewares: [customerAuth]},
 		{matcher: '/store/wishlists/:id', method: 'PUT', middlewares: [customerAuth, validateAndTransformBody(UpdateWishlistRequestSchema)]},
 		{matcher: '/store/wishlists/:id', method: ['GET', 'DELETE'], middlewares: [customerAuth]},
