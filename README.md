@@ -71,7 +71,7 @@ npx medusa db:migrate
 ### Plugin Options
 
 | Option                     | Type       | Default | Description                                     |
-| -------------------------- | ---------- |---------| ----------------------------------------------- |
+| -------------------------- | ---------- | ------- | ----------------------------------------------- |
 | `allowGuestWishlist`       | `boolean`  | `false` | Allow unauthenticated users to create wishlists |
 | `shareTokenSecret`         | `string`   | -       | Secret key for signing share tokens             |
 | `shareTokenExpiryDays`     | `number`   | `7`     | Number of days before share tokens expire       |
@@ -83,7 +83,7 @@ npx medusa db:migrate
 ## API Endpoints
 
 | Method | Endpoint                              | Scope | Auth | Description                               |
-| ------ | ------------------------------------- | ----- |------| ----------------------------------------- |
+| ------ | ------------------------------------- | ----- | ---- | ----------------------------------------- |
 | GET    | `/store/wishlists`                    | Store | ✅   | List wishlists for the current customer   |
 | POST   | `/store/wishlists`                    | Store | -    | Create a new wishlist                     |
 | GET    | `/store/wishlists/:id`                | Store | ✅   | Retrieve a wishlist by ID                 |
