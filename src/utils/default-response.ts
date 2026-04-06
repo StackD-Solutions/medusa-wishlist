@@ -9,7 +9,7 @@ export type PaginatedOutput<T> = {
 	prevPage: number
 }
 
-export function buildPaginatedResponse<T>(data: Array<T>, count: number, skip: number, take: number): PaginatedOutput<T> {
+export const buildPaginatedResponse = <T>(data: Array<T>, count: number, skip: number, take: number): PaginatedOutput<T> => {
 	const totalPages = Math.ceil(count / take)
 	const currentPage = Math.floor(skip / take) + 1
 

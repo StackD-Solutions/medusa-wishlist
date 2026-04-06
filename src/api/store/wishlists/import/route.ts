@@ -1,20 +1,15 @@
 import type {MedusaRequest, MedusaResponse} from '@medusajs/framework/http'
 import {WISHLIST_MODULE} from '../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../modules/wishlist/service'
-import {ImportWishlistRequestSchema} from './validators'
 import {getCustomerId} from '../../../../utils/utils'
+import type {ImportWishlistBody} from './validators'
 
-export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const POST = async (req: MedusaRequest<ImportWishlistBody>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
-
-	const parsed = ImportWishlistRequestSchema.safeParse(req.body)
-	if (!parsed.success) {
-		return res.status(400).json({message: 'Invalid request body', errors: parsed.error.issues})
-	}
 
 	let decoded: {wishlist_id: string}
 	try {
-		decoded = await wishlistService.validateShareToken(parsed.data.share_token)
+		decoded = await wishlistService.validateShareToken(req.body.share_token)
 	} catch {
 		return res.status(400).json({message: 'Invalid or expired share token'})
 	}

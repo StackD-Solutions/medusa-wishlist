@@ -70,28 +70,28 @@ npx medusa db:migrate
 
 ### Plugin Options
 
-| Option                     | Type       | Default        | Description                                     |
-| -------------------------- | ---------- | -------------- | ----------------------------------------------- |
-| `allowGuestWishlist`       | `boolean`  | `false`        | Allow unauthenticated users to create wishlists |
-| `shareTokenSecret`         | `string`   | ➖             | Secret key for signing share tokens             |
-| `shareTokenExpiryDays`     | `number`   | `7`            | Number of days before share tokens expire       |
-| `includeWishlistItems`     | `boolean`  | `false`        | Include items when listing wishlists            |
-| `includeWishlistItemsTake` | `number`   | `5`            | Max items to include per wishlist in list view  |
-| `wishlistFields`           | `string[]` | ➖             | Fields to include on wishlist queries           |
-| `wishlistItemsFields`      | `string[]` | ➖             | Fields to include on item queries               |
+| Option                     | Type       | Default | Description                                     |
+| -------------------------- | ---------- |---------| ----------------------------------------------- |
+| `allowGuestWishlist`       | `boolean`  | `false` | Allow unauthenticated users to create wishlists |
+| `shareTokenSecret`         | `string`   | -       | Secret key for signing share tokens             |
+| `shareTokenExpiryDays`     | `number`   | `7`     | Number of days before share tokens expire       |
+| `includeWishlistItems`     | `boolean`  | `false` | Include items when listing wishlists            |
+| `includeWishlistItemsTake` | `number`   | `5`     | Max items to include per wishlist in list view  |
+| `wishlistFields`           | `string[]` | -       | Fields to include on wishlist queries           |
+| `wishlistItemsFields`      | `string[]` | -       | Fields to include on item queries               |
 
 ## API Endpoints
 
 | Method | Endpoint                              | Scope | Auth | Description                               |
-| ------ | ------------------------------------- | ----- | ---- | ----------------------------------------- |
+| ------ | ------------------------------------- | ----- |------| ----------------------------------------- |
 | GET    | `/store/wishlists`                    | Store | ✅   | List wishlists for the current customer   |
-| POST   | `/store/wishlists`                    | Store | ➖   | Create a new wishlist                     |
+| POST   | `/store/wishlists`                    | Store | -    | Create a new wishlist                     |
 | GET    | `/store/wishlists/:id`                | Store | ✅   | Retrieve a wishlist by ID                 |
 | PUT    | `/store/wishlists/:id`                | Store | ✅   | Update wishlist metadata                  |
 | DELETE | `/store/wishlists/:id`                | Store | ✅   | Delete a wishlist                         |
 | POST   | `/store/wishlists/:id/transfer`       | Store | ✅   | Transfer guest wishlist to logged-in user |
 | GET    | `/store/wishlists/:id/items`          | Store | ✅   | Get items in a wishlist                   |
-| POST   | `/store/wishlists/:id/items`          | Store | ➖   | Add an item to the wishlist               |
+| POST   | `/store/wishlists/:id/items`          | Store | -    | Add an item to the wishlist               |
 | DELETE | `/store/wishlists/:id/items/:item_id` | Store | ✅   | Remove an item from the wishlist          |
 | POST   | `/store/wishlists/:id/share`          | Store | ✅   | Generate a share token for a wishlist     |
 | POST   | `/store/wishlists/import`             | Store | ✅   | Import a shared wishlist via token        |

@@ -12,7 +12,7 @@ export type {
 	TotalItemsCountResponse,
 	ListWishlistsQuery,
 	RetrieveWishlistQuery,
-	TotalItemsCountQuery,
+	TotalItemsCountQuery
 } from '../generated/schemas'
 
 export type {WishlistPluginOptions} from '../modules/wishlist/service'

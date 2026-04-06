@@ -1,8 +1,7 @@
 import type {MedusaRequest} from '@medusajs/framework/http'
 import {getCustomerId, requireCustomerId} from '../../../src/utils/utils'
 
-const mockRequest = (actorId?: string | null) =>
-	({auth_context: actorId !== undefined ? {actor_id: actorId} : undefined}) as unknown as MedusaRequest
+const mockRequest = (actorId?: string | null) => ({auth_context: actorId !== undefined ? {actor_id: actorId} : undefined}) as unknown as MedusaRequest
 
 describe('getCustomerId', () => {
 	it('should return customer id when authenticated', () => {

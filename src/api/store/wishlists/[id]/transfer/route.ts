@@ -3,7 +3,7 @@ import {WISHLIST_MODULE} from '../../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../../modules/wishlist/service'
 import {requireCustomerId} from '../../../../../utils/utils'
 
-export async function POST(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const POST = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)

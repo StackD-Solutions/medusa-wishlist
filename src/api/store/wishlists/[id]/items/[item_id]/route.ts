@@ -3,7 +3,7 @@ import {WISHLIST_MODULE} from '../../../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../../../modules/wishlist/service'
 import {requireCustomerId} from '../../../../../../utils/utils'
 
-export async function DELETE(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const DELETE = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id, item_id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)

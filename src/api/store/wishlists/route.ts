@@ -1,11 +1,11 @@
 import type {AuthenticatedMedusaRequest, MedusaRequest, MedusaResponse} from '@medusajs/framework/http'
 import {WISHLIST_MODULE} from '../../../modules/wishlist'
 import type WishlistModuleService from '../../../modules/wishlist/service'
-import {CreateWishlistRequestSchema} from './validators'
 import {buildPaginatedResponse} from '../../../utils/default-response'
 import {getCustomerId, requireCustomerId} from '../../../utils/utils'
+import type {CreateWishlistBody} from './validators'
 
-export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 
@@ -30,7 +30,7 @@ export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	return res.status(200).json(buildPaginatedResponse(wishlists, count, offset, limit))
 }
 
-export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const POST = async (req: MedusaRequest<CreateWishlistBody>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 	const customerId = getCustomerId(req)
 
@@ -38,13 +38,8 @@ export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<Med
 		return res.status(401).json({message: 'Authentication required'})
 	}
 
-	const parsed = CreateWishlistRequestSchema.safeParse(req.body)
-	if (!parsed.success) {
-		return res.status(400).json({message: 'Invalid request body', errors: parsed.error.issues})
-	}
-
 	const wishlist = await wishlistService.createWishlists({
-		...parsed.data,
+		...req.body,
 		customer_id: customerId
 	})
 

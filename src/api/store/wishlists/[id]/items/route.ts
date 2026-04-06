@@ -5,9 +5,9 @@ import {WISHLIST_MODULE} from '../../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../../modules/wishlist/service'
 import {buildPaginatedResponse} from '../../../../../utils/default-response'
 import {getCustomerId, requireCustomerId} from '../../../../../utils/utils'
-import {AddItemToWishlistRequestSchema} from '../../validators'
+import type {AddItemToWishlistBody} from '../../validators'
 
-export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
@@ -27,7 +27,7 @@ export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	return res.status(200).json(buildPaginatedResponse(items, count, offset, limit))
 }
 
-export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const POST = async (req: MedusaRequest<AddItemToWishlistBody>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = getCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
@@ -37,28 +37,23 @@ export async function POST(req: MedusaRequest, res: MedusaResponse): Promise<Med
 		return res.status(403).json({message: 'Not authorized to modify this wishlist'})
 	}
 
-	const parsed = AddItemToWishlistRequestSchema.safeParse(req.body)
-	if (!parsed.success) {
-		return res.status(400).json({message: 'Invalid request body', errors: parsed.error.issues})
-	}
-
 	const productService: IProductModuleService = req.scope.resolve(Modules.PRODUCT)
 	try {
-		await productService.retrieveProductVariant(parsed.data.product_variant_id)
+		await productService.retrieveProductVariant(req.body.product_variant_id)
 	} catch {
-		return res.status(404).json({message: `Product variant "${parsed.data.product_variant_id}" not found`})
+		return res.status(404).json({message: `Product variant "${req.body.product_variant_id}" not found`})
 	}
 
 	const [existing] = await wishlistService.listWishlistItems({
 		wishlist_id: id,
-		product_variant_id: parsed.data.product_variant_id
+		product_variant_id: req.body.product_variant_id
 	})
 	if (existing) {
 		return res.status(409).json({message: 'This item is already in the wishlist'})
 	}
 
 	const item = await wishlistService.createWishlistItems({
-		product_variant_id: parsed.data.product_variant_id,
+		product_variant_id: req.body.product_variant_id,
 		wishlist_id: id
 	})
 

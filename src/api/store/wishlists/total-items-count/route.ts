@@ -3,7 +3,7 @@ import {WISHLIST_MODULE} from '../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../modules/wishlist/service'
 import {requireCustomerId} from '../../../../utils/utils'
 
-export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 	const customerId = requireCustomerId(req)
 	const wishlistId = req.query.wishlist_id as string | undefined

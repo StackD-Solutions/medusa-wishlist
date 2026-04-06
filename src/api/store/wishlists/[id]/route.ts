@@ -1,10 +1,10 @@
-import type {AuthenticatedMedusaRequest, MedusaRequest, MedusaResponse} from '@medusajs/framework/http'
+import type {AuthenticatedMedusaRequest, MedusaResponse} from '@medusajs/framework/http'
 import {WISHLIST_MODULE} from '../../../../modules/wishlist'
 import type WishlistModuleService from '../../../../modules/wishlist/service'
-import {UpdateWishlistRequestSchema} from '../validators'
 import {requireCustomerId} from '../../../../utils/utils'
+import type {UpdateWishlistBody} from '../validators'
 
-export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
@@ -23,7 +23,7 @@ export async function GET(req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	})
 }
 
-export async function PUT(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const PUT = async (req: AuthenticatedMedusaRequest<UpdateWishlistBody>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
@@ -33,16 +33,11 @@ export async function PUT(req: AuthenticatedMedusaRequest, res: MedusaResponse):
 		return res.status(403).json({message: 'Not authorized to update this wishlist'})
 	}
 
-	const parsed = UpdateWishlistRequestSchema.safeParse(req.body)
-	if (!parsed.success) {
-		return res.status(400).json({message: 'Invalid request body', errors: parsed.error.issues})
-	}
-
-	const updated = await wishlistService.updateWishlists({id, ...parsed.data})
+	const updated = await wishlistService.updateWishlists({id, ...req.body})
 	return res.status(200).json(updated)
 }
 
-export async function DELETE(req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> {
+export const DELETE = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
