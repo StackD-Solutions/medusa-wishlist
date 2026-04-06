@@ -7,8 +7,7 @@
 	"main": "./.medusa/server/src/index.js",
 	"types": "./.medusa/types/index.d.ts",
 	"files": [
-		".medusa/server",
-		".medusa/types"
+		".medusa/**"
 	],
 	"exports": {
 		".": {
@@ -17,6 +16,7 @@
 			"require": "./.medusa/server/src/index.js",
 			"default": "./.medusa/server/src/index.js"
 		},
+		"./admin": "./.medusa/server/src/admin/index.mjs",
 		"./package.json": "./package.json",
 		"./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
 		"./modules/*": "./.medusa/server/src/modules/*/index.js",
