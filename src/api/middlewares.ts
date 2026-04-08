@@ -12,7 +12,7 @@ export default defineMiddlewares({
 		{matcher: '/store/wishlists/:id', method: 'PUT', middlewares: [customerAuth, validateAndTransformBody(UpdateWishlistRequestSchema)]},
 		{matcher: '/store/wishlists/:id', method: ['GET', 'DELETE'], middlewares: [customerAuth]},
 		{matcher: '/store/wishlists/:id/items', method: 'GET', middlewares: [customerAuth]},
-		{matcher: '/store/wishlists/:id/items/:item_id', method: 'DELETE', middlewares: [customerAuth]},
+		{matcher: '/store/wishlists/:id/items/:product_id', method: 'DELETE', middlewares: [customerAuth]},
 		{matcher: '/store/wishlists/:id/transfer', method: 'POST', middlewares: [customerAuth]},
 		{matcher: '/store/wishlists/:id/share', method: 'POST', middlewares: [customerAuth]},
 		{matcher: '/store/wishlists/import', method: 'POST', middlewares: [customerAuth, validateAndTransformBody(ImportWishlistRequestSchema)]},

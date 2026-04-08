@@ -5,8 +5,8 @@ import WishlistModule from '../modules/wishlist'
 export default defineLink(
 	{
 		linkable: WishlistModule.linkable.wishlistItem.id,
-		field: 'product_variant_id'
+		field: 'product_id'
 	},
-	ProductModule.linkable.productVariant.id,
+	ProductModule.linkable.product.id,
 	{readOnly: true}
 )

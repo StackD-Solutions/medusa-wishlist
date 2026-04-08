@@ -8,10 +8,7 @@ import WishlistItem from './models/wishlist-item'
 type WishlistType = InferTypeOf<typeof Wishlist>
 
 const PluginOptionsSchema = z.object({
-	wishlistFields: z.array(z.string()).optional(),
-	wishlistItemsFields: z.array(z.string()).optional(),
-	includeWishlistItems: z.boolean().default(false),
-	includeWishlistItemsTake: z.number().default(5),
+	maxWishlistNameLength: z.number().default(40),
 	shareTokenSecret: z.string().min(1),
 	shareTokenExpiryDays: z.number().default(7)
 })
@@ -30,12 +27,8 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 		return PluginOptionsSchema.parse(options)
 	}
 
-	get includeWishlistItems(): boolean {
-		return this.pluginOptions_.includeWishlistItems
-	}
-
-	get includeWishlistItemsTake(): number {
-		return this.pluginOptions_.includeWishlistItemsTake
+	get maxWishlistNameLength(): number {
+		return this.pluginOptions_.maxWishlistNameLength
 	}
 
 	async getWishlistCountsOfProduct(productId: string): Promise<number> {
@@ -48,8 +41,7 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 			`SELECT COUNT(DISTINCT wi.wishlist_id) as count
 			 FROM wishlist_item wi
 			 INNER JOIN wishlist w ON wi.wishlist_id = w.id AND w.deleted_at IS NULL
-			 INNER JOIN product_variant pv ON wi.product_variant_id = pv.id
-			 WHERE pv.product_id = ? AND wi.deleted_at IS NULL`,
+			 WHERE wi.product_id = ? AND wi.deleted_at IS NULL`,
 			[productId]
 		)
 
@@ -108,7 +100,7 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 
 		for (const item of sourceItems) {
 			await this.createWishlistItems({
-				product_variant_id: item.product_variant_id,
+				product_id: item.product_id,
 				wishlist_id: newWishlist.id
 			})
 		}

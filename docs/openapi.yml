@@ -201,7 +201,7 @@ paths:
         $ref: '#/components/schemas/Error'
   post:
    summary: Add item to wishlist
-   description: Adds a product variant to a wishlist
+   description: Adds a product to a wishlist
    operationId: addItemToWishlist
    tags:
     - Wishlist Items
@@ -221,7 +221,7 @@ paths:
        schema:
         $ref: '#/components/schemas/WishlistItem'
     '404':
-     description: Product variant not found
+     description: Product not found
      content:
       application/json:
        schema:
@@ -233,29 +233,35 @@ paths:
        schema:
         $ref: '#/components/schemas/Error'
 
- /store/wishlists/{id}/items/{item_id}:
+ /store/wishlists/{id}/items/{product_id}:
   delete:
    summary: Remove item from wishlist
-   description: Removes an item from a wishlist
+   description: Removes an item from a wishlist by product ID
    operationId: removeItemFromWishlist
    tags:
     - Wishlist Items
    parameters:
     - $ref: '#/components/parameters/WishlistId'
-    - name: item_id
+    - name: product_id
       in: path
       required: true
       schema:
        type: string
    responses:
     '200':
-     description: Removed item ID
+     description: Removed product ID
      content:
       application/json:
        schema:
         $ref: '#/components/schemas/DeleteResponse'
     '403':
      description: Not authorized to modify this wishlist
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+    '404':
+     description: Product not found in wishlist
      content:
       application/json:
        schema:
@@ -460,14 +466,14 @@ components:
    type: object
    required:
     - id
-    - product_variant_id
+    - product_id
     - wishlist_id
     - created_at
     - updated_at
    properties:
     id:
      type: string
-    product_variant_id:
+    product_id:
      type: string
     wishlist_id:
      type: string
@@ -481,7 +487,7 @@ components:
      type: string
      format: date-time
      nullable: true
-    product_variant:
+    product:
      type: object
      nullable: true
 
@@ -554,6 +560,7 @@ components:
    properties:
     name:
      type: string
+     minLength: 1
     sales_channel_id:
      type: string
 
@@ -562,13 +569,14 @@ components:
    properties:
     name:
      type: string
+     minLength: 1
 
   AddItemToWishlistRequest:
    type: object
    required:
-    - product_variant_id
+    - product_id
    properties:
-    product_variant_id:
+    product_id:
      type: string
 
   ImportWishlistRequest:
