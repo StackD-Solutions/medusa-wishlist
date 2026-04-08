@@ -33,6 +33,11 @@ describe('CreateWishlistRequestSchema', () => {
 		const result = CreateWishlistRequestSchema.safeParse({sales_channel_id: 123})
 		expect(result.success).toBe(false)
 	})
+
+	it('should reject blank name', () => {
+		const result = CreateWishlistRequestSchema.safeParse({name: '', sales_channel_id: 'sc_123'})
+		expect(result.success).toBe(false)
+	})
 })
 
 describe('UpdateWishlistRequestSchema', () => {
@@ -45,6 +50,11 @@ describe('UpdateWishlistRequestSchema', () => {
 	it('should accept empty object', () => {
 		const result = UpdateWishlistRequestSchema.safeParse({})
 		expect(result.success).toBe(true)
+	})
+
+	it('should reject blank name', () => {
+		const result = UpdateWishlistRequestSchema.safeParse({name: ''})
+		expect(result.success).toBe(false)
 	})
 
 	it('should strip unknown fields', () => {
@@ -99,19 +109,19 @@ describe('RetrieveWishlistQuerySchema', () => {
 })
 
 describe('AddItemToWishlistRequestSchema', () => {
-	it('should accept valid product_variant_id', () => {
-		const result = AddItemToWishlistRequestSchema.safeParse({product_variant_id: 'variant_123'})
+	it('should accept valid product_id', () => {
+		const result = AddItemToWishlistRequestSchema.safeParse({product_id: 'variant_123'})
 		expect(result.success).toBe(true)
-		expect(result.data).toEqual({product_variant_id: 'variant_123'})
+		expect(result.data).toEqual({product_id: 'variant_123'})
 	})
 
-	it('should reject missing product_variant_id', () => {
+	it('should reject missing product_id', () => {
 		const result = AddItemToWishlistRequestSchema.safeParse({})
 		expect(result.success).toBe(false)
 	})
 
-	it('should reject non-string product_variant_id', () => {
-		const result = AddItemToWishlistRequestSchema.safeParse({product_variant_id: 123})
+	it('should reject non-string product_id', () => {
+		const result = AddItemToWishlistRequestSchema.safeParse({product_id: 123})
 		expect(result.success).toBe(false)
 	})
 })

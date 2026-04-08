@@ -33,6 +33,10 @@ export const PUT = async (req: AuthenticatedMedusaRequest<UpdateWishlistRequest>
 		return res.status(403).json({message: 'Not authorized to update this wishlist'})
 	}
 
+	if (req.body.name && req.body.name.length > wishlistService.maxWishlistNameLength) {
+		return res.status(400).json({message: `Wishlist name must be at most ${wishlistService.maxWishlistNameLength} characters`})
+	}
+
 	const updated = await wishlistService.updateWishlists({id, ...req.body})
 	return res.status(200).json(updated)
 }

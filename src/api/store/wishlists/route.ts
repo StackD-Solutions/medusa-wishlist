@@ -12,27 +12,21 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	const limit = parseInt(req.query.limit as string) || 10
 	const offset = parseInt(req.query.offset as string) || 0
 
-	const wishlists = await wishlistService.listWishlists({customer_id: customerId}, {take: limit, skip: offset, order: {created_at: 'DESC'}})
+	const [wishlists, totalCount] = await wishlistService.listAndCountWishlists(
+		{customer_id: customerId},
+		{order: {created_at: 'DESC'}, relations: ['items'], take: limit, skip: offset}
+	)
 
-	const [, count] = await wishlistService.listAndCountWishlists({customer_id: customerId})
-
-	for (const wl of wishlists) {
-		const [items, itemsCount] = await wishlistService.listAndCountWishlistItems(
-			{wishlist_id: wl.id},
-			...(wishlistService.includeWishlistItems ? [{take: wishlistService.includeWishlistItemsTake}] : [])
-		)
-		if (wishlistService.includeWishlistItems) {
-			;(wl as Record<string, any>).items = items
-		}
-		;(wl as Record<string, any>).items_count = itemsCount
-	}
-
-	return res.status(200).json(buildPaginatedResponse(wishlists, count, offset, limit))
+	return res.status(200).json(buildPaginatedResponse(wishlists, totalCount, offset, limit))
 }
 
 export const POST = async (req: AuthenticatedMedusaRequest<CreateWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
+
+	if (req.body.name && req.body.name.length > wishlistService.maxWishlistNameLength) {
+		return res.status(400).json({message: `Wishlist name must be at most ${wishlistService.maxWishlistNameLength} characters`})
+	}
 
 	const wishlist = await wishlistService.createWishlists({
 		...req.body,
