@@ -1,20 +1,21 @@
-import type {AuthenticatedMedusaRequest, MedusaResponse} from '@medusajs/framework/http'
+import type {AuthenticatedMedusaRequest, MedusaRequest, MedusaResponse} from '@medusajs/framework/http'
 import {Modules} from '@medusajs/framework/utils'
 import type {IProductModuleService} from '@medusajs/framework/types'
 import {WISHLIST_MODULE} from '../../../../../modules/wishlist'
+import {WishlistVisibility} from '../../../../../modules/wishlist/models/wishlist'
 import type WishlistModuleService from '../../../../../modules/wishlist/service'
 import {buildPaginatedResponse} from '../../../../../utils/default-response'
-import {requireCustomerId} from '../../../../../utils/utils'
+import {getCustomerId, requireCustomerId} from '../../../../../utils/utils'
 import type {AddItemToWishlistRequest} from '../../validators'
 
-export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
+export const GET = async (req: MedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
-	const customerId = requireCustomerId(req)
+	const customerId = getCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 
 	const wishlist = await wishlistService.retrieveWishlist(id)
-	if (wishlist.customer_id !== customerId) {
-		return res.status(403).json({message: 'Not authorized to access this wishlist'})
+	if (wishlist.visibility !== WishlistVisibility.PUBLIC && wishlist.customer_id !== customerId) {
+		return res.status(404).json({message: 'Wishlist not found'})
 	}
 
 	const limit = parseInt(req.query.limit as string) || 10

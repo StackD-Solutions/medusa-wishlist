@@ -79,7 +79,7 @@ paths:
  /store/wishlists/{id}:
   get:
    summary: Retrieve wishlist
-   description: Returns a single wishlist with its items
+   description: Returns a single wishlist with its items. Public wishlists can be retrieved without authentication.
    operationId: retrieveWishlist
    tags:
     - Wishlists
@@ -170,7 +170,7 @@ paths:
  /store/wishlists/{id}/items:
   get:
    summary: List wishlist items
-   description: Returns a paginated list of items in a wishlist
+   description: Returns a paginated list of items in a wishlist. Public wishlists can be accessed without authentication.
    operationId: listWishlistItems
    tags:
     - Wishlist Items
@@ -267,29 +267,6 @@ paths:
        schema:
         $ref: '#/components/schemas/Error'
 
- /store/wishlists/{id}/share:
-  post:
-   summary: Generate share token
-   description: Generates a JWT share token for a wishlist
-   operationId: generateShareToken
-   tags:
-    - Wishlist Sharing
-   parameters:
-    - $ref: '#/components/parameters/WishlistId'
-   responses:
-    '200':
-     description: Share token generated
-     content:
-      application/json:
-       schema:
-        $ref: '#/components/schemas/ShareTokenResponse'
-    '403':
-     description: Not authorized to share this wishlist
-     content:
-      application/json:
-       schema:
-        $ref: '#/components/schemas/Error'
-
  /store/wishlists/{id}/transfer:
   post:
    summary: Transfer guest wishlist
@@ -321,11 +298,11 @@ paths:
 
  /store/wishlists/import:
   post:
-   summary: Import shared wishlist
-   description: Creates a copy of a shared wishlist using a share token
+   summary: Import public wishlist
+   description: Creates a copy of a public wishlist into the authenticated customer's wishlists
    operationId: importWishlist
    tags:
-    - Wishlist Sharing
+    - Wishlists
    requestBody:
     required: true
     content:
@@ -339,14 +316,14 @@ paths:
       application/json:
        schema:
         $ref: '#/components/schemas/Wishlist'
-    '400':
-     description: Invalid or expired share token
+    '403':
+     description: Not authorized to import this wishlist
      content:
       application/json:
        schema:
         $ref: '#/components/schemas/Error'
     '404':
-     description: Shared wishlist no longer exists
+     description: Wishlist not found
      content:
       application/json:
        schema:
@@ -432,6 +409,7 @@ components:
    required:
     - id
     - sales_channel_id
+    - visibility
     - created_at
     - updated_at
    properties:
@@ -445,6 +423,12 @@ components:
      nullable: true
     sales_channel_id:
      type: string
+    visibility:
+     type: string
+     enum:
+      - private
+      - public
+     default: private
     created_at:
      type: string
      format: date-time
@@ -570,6 +554,11 @@ components:
     name:
      type: string
      minLength: 1
+    visibility:
+     type: string
+     enum:
+      - private
+      - public
 
   AddItemToWishlistRequest:
    type: object
@@ -582,17 +571,9 @@ components:
   ImportWishlistRequest:
    type: object
    required:
-    - share_token
+    - wishlist_id
    properties:
-    share_token:
-     type: string
-
-  ShareTokenResponse:
-   type: object
-   required:
-    - share_token
-   properties:
-    share_token:
+    wishlist_id:
      type: string
 
   DeleteResponse:

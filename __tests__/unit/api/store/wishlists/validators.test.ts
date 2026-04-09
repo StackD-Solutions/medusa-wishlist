@@ -41,10 +41,15 @@ describe('CreateWishlistRequestSchema', () => {
 })
 
 describe('UpdateWishlistRequestSchema', () => {
-	it('should accept valid name', () => {
-		const result = UpdateWishlistRequestSchema.safeParse({name: 'Updated'})
+	it('should accept all updatable fields', () => {
+		const result = UpdateWishlistRequestSchema.safeParse({name: 'Updated', visibility: 'public'})
 		expect(result.success).toBe(true)
-		expect(result.data).toEqual({name: 'Updated'})
+		expect(result.data).toEqual({name: 'Updated', visibility: 'public'})
+	})
+
+	it('should reject invalid visibility value', () => {
+		const result = UpdateWishlistRequestSchema.safeParse({visibility: 'unlisted'})
+		expect(result.success).toBe(false)
 	})
 
 	it('should accept empty object', () => {

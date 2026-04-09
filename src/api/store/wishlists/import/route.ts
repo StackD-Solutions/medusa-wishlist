@@ -1,29 +1,27 @@
-import type {MedusaRequest, MedusaResponse} from '@medusajs/framework/http'
+import type {AuthenticatedMedusaRequest, MedusaResponse} from '@medusajs/framework/http'
 import {WISHLIST_MODULE} from '../../../../modules/wishlist'
+import {WishlistVisibility} from '../../../../modules/wishlist/models/wishlist'
 import type WishlistModuleService from '../../../../modules/wishlist/service'
-import {getCustomerId} from '../../../../utils/utils'
+import {requireCustomerId} from '../../../../utils/utils'
 import type {ImportWishlistRequest} from './validators'
 
-export const POST = async (req: MedusaRequest<ImportWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
+export const POST = async (req: AuthenticatedMedusaRequest<ImportWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
+	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
-
-	let decoded: {wishlist_id: string}
-	try {
-		decoded = await wishlistService.validateShareToken(req.body.share_token)
-	} catch {
-		return res.status(400).json({message: 'Invalid or expired share token'})
-	}
 
 	let sourceWishlist
 	try {
-		sourceWishlist = await wishlistService.retrieveWishlist(decoded.wishlist_id)
+		sourceWishlist = await wishlistService.retrieveWishlist(req.body.wishlist_id)
 	} catch {
-		return res.status(404).json({message: 'Shared wishlist no longer exists'})
+		return res.status(404).json({message: 'Wishlist not found'})
 	}
-	const customerId = getCustomerId(req)
+
+	if (sourceWishlist.visibility !== WishlistVisibility.PUBLIC) {
+		return res.status(403).json({message: 'Not authorized to import this wishlist'})
+	}
 
 	const newWishlist = await wishlistService.importWishlist({
-		id: decoded.wishlist_id,
+		id: req.body.wishlist_id,
 		customer_id: customerId,
 		sales_channel_id: sourceWishlist.sales_channel_id
 	})

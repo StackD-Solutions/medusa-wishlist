@@ -7,7 +7,6 @@ export type {
 	UpdateWishlistRequest,
 	AddItemToWishlistRequest,
 	ImportWishlistRequest,
-	ShareTokenResponse,
 	DeleteResponse,
 	TotalItemsCountResponse,
 	ListWishlistsQuery,

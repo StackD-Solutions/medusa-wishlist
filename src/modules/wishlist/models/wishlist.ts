@@ -1,12 +1,18 @@
 import {model} from '@medusajs/framework/utils'
 import WishlistItem from './wishlist-item'
 
+export enum WishlistVisibility {
+	PRIVATE = 'private',
+	PUBLIC = 'public'
+}
+
 const Wishlist = model
 	.define('wishlist', {
 		id: model.id({prefix: 'wl'}).primaryKey(),
 		name: model.text().nullable(),
 		customer_id: model.text().nullable(),
 		sales_channel_id: model.text(),
+		visibility: model.enum(Object.values(WishlistVisibility)).default(WishlistVisibility.PRIVATE),
 		items: model.hasMany(() => WishlistItem)
 	})
 	.cascades({

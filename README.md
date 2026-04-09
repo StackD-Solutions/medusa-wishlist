@@ -13,15 +13,15 @@
   <img src="https://img.shields.io/npm/types/@stackd-solutions/medusa-wishlist" alt="Types Included">
 </p>
 
-A [Medusa v2](https://medusajs.com/) plugin that adds wishlist functionality for customers. Customers can create, manage, and share wishlists of product variants. Supports sharing via tokens and an admin widget showing wishlist counts per product.
+A [Medusa v2](https://medusajs.com/) plugin that adds wishlist functionality for customers. Customers can create, manage, and share wishlists of products. Supports public/private visibility and an admin widget showing wishlist counts per product.
 
 ## Features
 
 - Create, update, and delete wishlists
-- Add and remove product variants from wishlists
+- Add and remove products from wishlists
 - Multiple wishlists per customer
-- Share wishlists via JWT tokens
-- Import shared wishlists
+- Public/private wishlist visibility
+- Import public wishlists
 - Transfer guest wishlists to authenticated customers
 - Admin widget showing wishlist count per product
 - Pagination on all list endpoints
@@ -44,17 +44,13 @@ export default defineConfig({
 	plugins: [
 		{
 			resolve: '@stackd-solutions/medusa-wishlist',
-			options: {
-				shareTokenSecret: 'your-secret-key'
-			}
+			options: {}
 		}
 	],
 	modules: [
 		{
 			resolve: '@stackd-solutions/medusa-wishlist/modules/wishlist',
-			options: {
-				shareTokenSecret: 'your-secret-key'
-			}
+			options: {}
 		}
 	]
 })
@@ -68,35 +64,28 @@ npx medusa db:migrate
 
 ### Plugin Options
 
-| Option                     | Type       | Default | Description                                     |
-| -------------------------- | ---------- | ------- | ----------------------------------------------- |
-| `shareTokenSecret`         | `string`   | -       | Secret key for signing share tokens             |
-| `shareTokenExpiryDays`     | `number`   | `7`     | Number of days before share tokens expire       |
-| `includeWishlistItems`     | `boolean`  | `false` | Include items when listing wishlists            |
-| `includeWishlistItemsTake` | `number`   | `5`     | Max items to include per wishlist in list view  |
-| `maxWishlistNameLength`    | `number`   | `40`    | Maximum characters allowed for wishlist names   |
-| `wishlistFields`           | `string[]` | -       | Fields to include on wishlist queries           |
-| `wishlistItemsFields`      | `string[]` | -       | Fields to include on item queries               |
+| Option                  | Type     | Default | Description                                   |
+| ----------------------- | -------- | ------- | --------------------------------------------- |
+| `maxWishlistNameLength` | `number` | `40`    | Maximum characters allowed for wishlist names |
 
 ## API Endpoints
 
-| Method | Endpoint                                  | Scope | Auth | Description                               |
-| ------ |-------------------------------------------| ----- | ---- | ----------------------------------------- |
-| GET    | `/store/wishlists`                        | Store | ✅   | List wishlists for the current customer   |
-| POST   | `/store/wishlists`                        | Store | ✅   | Create a new wishlist                     |
-| GET    | `/store/wishlists/:id`                    | Store | ✅   | Retrieve a wishlist by ID                 |
-| PUT    | `/store/wishlists/:id`                    | Store | ✅   | Update wishlist metadata                  |
-| DELETE | `/store/wishlists/:id`                    | Store | ✅   | Delete a wishlist                         |
-| POST   | `/store/wishlists/:id/transfer`           | Store | ✅   | Transfer guest wishlist to logged-in user |
-| GET    | `/store/wishlists/:id/items`              | Store | ✅   | Get items in a wishlist                   |
-| POST   | `/store/wishlists/:id/items`              | Store | ✅   | Add an item to the wishlist               |
-| DELETE | `/store/wishlists/:id/items/:product_id`  | Store | ✅   | Remove an item from the wishlist          |
-| POST   | `/store/wishlists/:id/share`              | Store | ✅   | Generate a share token for a wishlist     |
-| POST   | `/store/wishlists/import`                 | Store | ✅   | Import a shared wishlist via token        |
-| GET    | `/store/wishlists/total-items-count`      | Store | ✅   | Get total items count across wishlists    |
-| GET    | `/admin/products/:id/wishlist`            | Admin | ✅   | Get wishlist count for a product          |
+| Method | Endpoint                                 | Scope | Auth | Description                               |
+| ------ | ---------------------------------------- | ----- |------| ----------------------------------------- |
+| GET    | `/store/wishlists`                       | Store | ✅   | List wishlists for the current customer   |
+| POST   | `/store/wishlists`                       | Store | ✅   | Create a new wishlist                     |
+| GET    | `/store/wishlists/:id`                   | Store | ⚠️   | Retrieve a wishlist by ID                 |
+| PUT    | `/store/wishlists/:id`                   | Store | ✅   | Update wishlist metadata and visibility   |
+| DELETE | `/store/wishlists/:id`                   | Store | ✅   | Delete a wishlist                         |
+| POST   | `/store/wishlists/:id/transfer`          | Store | ✅   | Transfer guest wishlist to logged-in user |
+| GET    | `/store/wishlists/:id/items`             | Store | ⚠️   | Get items in a wishlist                   |
+| POST   | `/store/wishlists/:id/items`             | Store | ✅   | Add an item to the wishlist               |
+| DELETE | `/store/wishlists/:id/items/:product_id` | Store | ✅   | Remove an item from the wishlist          |
+| POST   | `/store/wishlists/import`                | Store | ✅   | Import a public wishlist                  |
+| GET    | `/store/wishlists/total-items-count`     | Store | ✅   | Get total items count across wishlists    |
+| GET    | `/admin/products/:id/wishlist`           | Admin | ✅   | Get wishlist count for a product          |
 
-All store endpoints require an authenticated customer session.
+✅ = Requires authentication. ⚠️ = Public wishlists can be accessed without authentication.
 
 ## Admin Widget
 
@@ -126,7 +115,6 @@ import type {
 	UpdateWishlistRequest,
 	AddItemToWishlistRequest,
 	ImportWishlistRequest,
-	ShareTokenResponse,
 	DeleteResponse,
 	TotalItemsCountResponse,
 	WishlistPluginOptions

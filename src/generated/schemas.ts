@@ -15,6 +15,7 @@ export const Wishlist = z.object({
 	name: z.string().nullish(),
 	customer_id: z.string().nullish(),
 	sales_channel_id: z.string(),
+	visibility: z.enum(['private', 'public']).default('private'),
 	created_at: z.string().datetime({offset: true}),
 	updated_at: z.string().datetime({offset: true}),
 	deleted_at: z.string().datetime({offset: true}).nullish(),
@@ -37,7 +38,7 @@ export const Error = z.object({message: z.string(), code: z.string().optional()}
 export type Error = z.infer<typeof Error>
 export const CreateWishlistRequest = z.object({name: z.string().min(1).optional(), sales_channel_id: z.string()})
 export type CreateWishlistRequest = z.infer<typeof CreateWishlistRequest>
-export const UpdateWishlistRequest = z.object({name: z.string().min(1)}).partial()
+export const UpdateWishlistRequest = z.object({name: z.string().min(1), visibility: z.enum(['private', 'public'])}).partial()
 export type UpdateWishlistRequest = z.infer<typeof UpdateWishlistRequest>
 export const DeleteResponse = z.object({id: z.string()})
 export type DeleteResponse = z.infer<typeof DeleteResponse>
@@ -54,9 +55,7 @@ export const PaginatedWishlistItemResponse = z.object({
 export type PaginatedWishlistItemResponse = z.infer<typeof PaginatedWishlistItemResponse>
 export const AddItemToWishlistRequest = z.object({product_id: z.string()})
 export type AddItemToWishlistRequest = z.infer<typeof AddItemToWishlistRequest>
-export const ShareTokenResponse = z.object({share_token: z.string()})
-export type ShareTokenResponse = z.infer<typeof ShareTokenResponse>
-export const ImportWishlistRequest = z.object({share_token: z.string()})
+export const ImportWishlistRequest = z.object({wishlist_id: z.string()})
 export type ImportWishlistRequest = z.infer<typeof ImportWishlistRequest>
 export const TotalItemsCountResponse = z.object({total_items_count: z.number().int()})
 export type TotalItemsCountResponse = z.infer<typeof TotalItemsCountResponse>

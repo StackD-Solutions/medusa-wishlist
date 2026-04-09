@@ -1,6 +1,5 @@
 import type {InferTypeOf} from '@medusajs/framework/types'
 import {MedusaService} from '@medusajs/framework/utils'
-import jwt from 'jsonwebtoken'
 import {z} from 'zod'
 import Wishlist from './models/wishlist'
 import WishlistItem from './models/wishlist-item'
@@ -8,9 +7,7 @@ import WishlistItem from './models/wishlist-item'
 type WishlistType = InferTypeOf<typeof Wishlist>
 
 const PluginOptionsSchema = z.object({
-	maxWishlistNameLength: z.number().default(40),
-	shareTokenSecret: z.string().min(1),
-	shareTokenExpiryDays: z.number().default(7)
+	maxWishlistNameLength: z.number().default(40)
 })
 
 export type WishlistPluginOptions = z.infer<typeof PluginOptionsSchema>
@@ -77,15 +74,6 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 		}
 
 		return 0
-	}
-
-	async generateShareToken(args: {wishlist_id: string}): Promise<string> {
-		return jwt.sign({wishlist_id: args.wishlist_id}, this.pluginOptions_.shareTokenSecret, {expiresIn: `${this.pluginOptions_.shareTokenExpiryDays}d`})
-	}
-
-	async validateShareToken(shareToken: string): Promise<{wishlist_id: string}> {
-		const decoded = jwt.verify(shareToken, this.pluginOptions_.shareTokenSecret) as {wishlist_id: string}
-		return {wishlist_id: decoded.wishlist_id}
 	}
 
 	async importWishlist(args: {id: string; customer_id: string | null; sales_channel_id: string}): Promise<WishlistType> {
