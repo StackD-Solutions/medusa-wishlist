@@ -6,7 +6,7 @@ import {WishlistVisibility} from '../../../../../modules/wishlist/models/wishlis
 import type WishlistModuleService from '../../../../../modules/wishlist/service'
 import {buildPaginatedResponse} from '../../../../../utils/default-response'
 import {getCustomerId, requireCustomerId} from '../../../../../utils/utils'
-import type {AddItemToWishlistRequest} from '../../validators'
+import type {AddWishlistItemRequest} from '../../validators'
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
@@ -28,14 +28,14 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse): Promise<Medu
 	return res.status(200).json(buildPaginatedResponse(items, count, offset, limit))
 }
 
-export const POST = async (req: AuthenticatedMedusaRequest<AddItemToWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
+export const POST = async (req: AuthenticatedMedusaRequest<AddWishlistItemRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
 	const {id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 
 	const wishlist = await wishlistService.retrieveWishlist(id)
 	if (wishlist.customer_id !== customerId) {
-		return res.status(403).json({message: 'Not authorized to modify this wishlist'})
+		return res.status(404).json({message: 'Wishlist not found'})
 	}
 
 	const productService: IProductModuleService = req.scope.resolve(Modules.PRODUCT)
@@ -58,5 +58,5 @@ export const POST = async (req: AuthenticatedMedusaRequest<AddItemToWishlistRequ
 		wishlist_id: id
 	})
 
-	return res.status(201).json(item)
+	return res.status(201).json({data: item})
 }

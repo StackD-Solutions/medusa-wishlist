@@ -1,10 +1,7 @@
-import type {InferTypeOf} from '@medusajs/framework/types'
 import {MedusaService} from '@medusajs/framework/utils'
 import {z} from 'zod'
 import Wishlist from './models/wishlist'
 import WishlistItem from './models/wishlist-item'
-
-type WishlistType = InferTypeOf<typeof Wishlist>
 
 const PluginOptionsSchema = z.object({
 	maxWishlistNameLength: z.number().default(40)
@@ -45,55 +42,30 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 		return parseInt(result.rows?.[0]?.count || '0', 10)
 	}
 
-	async totalItemsCount(args: {customer_id?: string; wishlist_id?: string}): Promise<number> {
-		const {customer_id, wishlist_id} = args
-		const knex = (this as Record<string, any>).__container__?.resolve('__pg_connection__')
+	async getItemsCountByWishlistIds(wishlistIds: Array<string>): Promise<Record<string, number>> {
+		if (wishlistIds.length === 0) {
+			return {}
+		}
+
+		const knex = (this as Record<string, any>).__container__?.['__pg_connection__']
 		if (!knex) {
-			return 0
+			return {}
 		}
 
-		if (wishlist_id) {
-			const result = await knex.raw(
-				`SELECT COUNT(*) as count
-				 FROM wishlist_item wi
-				 WHERE wi.wishlist_id = ? AND wi.deleted_at IS NULL`,
-				[wishlist_id]
-			)
-			return parseInt(result.rows?.[0]?.count || '0', 10)
+		const placeholders = wishlistIds.map(() => '?').join(', ')
+		const result = await knex.raw(
+			`SELECT wishlist_id, COUNT(*) as count
+			 FROM wishlist_item
+			 WHERE wishlist_id IN (${placeholders}) AND deleted_at IS NULL
+			 GROUP BY wishlist_id`,
+			wishlistIds
+		)
+
+		const counts: Record<string, number> = {}
+		for (const row of result.rows || []) {
+			counts[row.wishlist_id] = parseInt(row.count, 10)
 		}
-
-		if (customer_id) {
-			const result = await knex.raw(
-				`SELECT COUNT(*) as count
-				 FROM wishlist_item wi
-				 INNER JOIN wishlist w ON wi.wishlist_id = w.id AND w.deleted_at IS NULL
-				 WHERE w.customer_id = ? AND wi.deleted_at IS NULL`,
-				[customer_id]
-			)
-			return parseInt(result.rows?.[0]?.count || '0', 10)
-		}
-
-		return 0
-	}
-
-	async importWishlist(args: {id: string; customer_id: string | null; sales_channel_id: string}): Promise<WishlistType> {
-		const sourceItems = await this.listWishlistItems({wishlist_id: args.id})
-		const sourceWishlist = await this.retrieveWishlist(args.id)
-
-		const newWishlist = await this.createWishlists({
-			name: sourceWishlist.name,
-			customer_id: args.customer_id,
-			sales_channel_id: args.sales_channel_id
-		})
-
-		for (const item of sourceItems) {
-			await this.createWishlistItems({
-				product_id: item.product_id,
-				wishlist_id: newWishlist.id
-			})
-		}
-
-		return newWishlist
+		return counts
 	}
 }
 

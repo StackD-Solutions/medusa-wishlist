@@ -3,6 +3,7 @@ import type {Config} from 'jest'
 const config: Config = {
 	testEnvironment: 'node',
 	roots: ['<rootDir>/__tests__'],
+	testMatch: ['**/*.test.ts'],
 	moduleFileExtensions: ['ts', 'tsx', 'js'],
 	transform: {
 		'^.+\\.tsx?$': '@swc/jest'

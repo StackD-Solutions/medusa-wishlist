@@ -1,6 +1,6 @@
+import {useEffect, useState} from 'react'
 import {defineWidgetConfig} from '@medusajs/admin-sdk'
 import {Container, Heading} from '@medusajs/ui'
-import {useEffect, useState} from 'react'
 
 const WishlistProductWidget = ({data}: {data: {id: string}}) => {
 	const [count, setCount] = useState<number | null>(null)

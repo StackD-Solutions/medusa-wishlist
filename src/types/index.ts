@@ -1,17 +1,17 @@
 export type {
 	Wishlist,
 	WishlistItem,
-	PaginatedWishlistResponse,
-	PaginatedWishlistItemResponse,
+	WishlistVisibility,
+	WishlistListResponse,
+	WishlistResponse,
+	WishlistItemsResponse,
+	WishlistItemResponse,
+	DeleteResponse,
+	PaginationMetadata,
 	CreateWishlistRequest,
 	UpdateWishlistRequest,
-	AddItemToWishlistRequest,
-	ImportWishlistRequest,
-	DeleteResponse,
-	TotalItemsCountResponse,
-	ListWishlistsQuery,
-	RetrieveWishlistQuery,
-	TotalItemsCountQuery
+	AddWishlistItemRequest,
+	ProductWishlistCountResponse
 } from '../generated/schemas'
 
 export type {WishlistPluginOptions} from '../modules/wishlist/service'

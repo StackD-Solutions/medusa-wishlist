@@ -14,10 +14,19 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 
 	const [wishlists, totalCount] = await wishlistService.listAndCountWishlists(
 		{customer_id: customerId},
-		{order: {created_at: 'DESC'}, relations: ['items'], take: limit, skip: offset}
+		{order: {created_at: 'DESC'}, take: limit, skip: offset}
 	)
 
-	return res.status(200).json(buildPaginatedResponse(wishlists, totalCount, offset, limit))
+	const itemsCounts = await wishlistService.getItemsCountByWishlistIds(wishlists.map((w) => w.id))
+
+	return res.status(200).json(
+		buildPaginatedResponse(
+			wishlists.map((w) => ({...w, items_count: itemsCounts[w.id] || 0})),
+			totalCount,
+			offset,
+			limit
+		)
+	)
 }
 
 export const POST = async (req: AuthenticatedMedusaRequest<CreateWishlistRequest>, res: MedusaResponse): Promise<MedusaResponse> => {
@@ -33,5 +42,5 @@ export const POST = async (req: AuthenticatedMedusaRequest<CreateWishlistRequest
 		customer_id: customerId
 	})
 
-	return res.status(201).json(wishlist)
+	return res.status(201).json({data: {...wishlist, items_count: 0}})
 }

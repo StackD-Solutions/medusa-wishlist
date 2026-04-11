@@ -1,9 +1,7 @@
 import {
 	CreateWishlistRequestSchema,
 	UpdateWishlistRequestSchema,
-	ListWishlistsQuerySchema,
-	RetrieveWishlistQuerySchema,
-	AddItemToWishlistRequestSchema
+	AddWishlistItemRequestSchema
 } from '../../../../../src/api/store/wishlists/validators'
 
 describe('CreateWishlistRequestSchema', () => {
@@ -67,66 +65,28 @@ describe('UpdateWishlistRequestSchema', () => {
 		expect(result.success).toBe(true)
 		expect(result.data).toEqual({name: 'Updated'})
 	})
-})
 
-describe('ListWishlistsQuerySchema', () => {
-	it('should accept items_fields array', () => {
-		const result = ListWishlistsQuerySchema.safeParse({items_fields: ['id', 'name']})
+	it('should accept valid private visibility', () => {
+		const result = UpdateWishlistRequestSchema.safeParse({visibility: 'private'})
 		expect(result.success).toBe(true)
-		expect(result.data).toEqual({items_fields: ['id', 'name']})
-	})
-
-	it('should accept empty object', () => {
-		const result = ListWishlistsQuerySchema.safeParse({})
-		expect(result.success).toBe(true)
-	})
-
-	it('should reject non-string array items', () => {
-		const result = ListWishlistsQuerySchema.safeParse({items_fields: [123]})
-		expect(result.success).toBe(false)
+		expect(result.data).toEqual({visibility: 'private'})
 	})
 })
 
-describe('RetrieveWishlistQuerySchema', () => {
-	it('should accept all optional fields', () => {
-		const result = RetrieveWishlistQuerySchema.safeParse({
-			items_fields: ['id'],
-			include_inventory_count: true,
-			include_calculated_price: false
-		})
-		expect(result.success).toBe(true)
-		expect(result.data).toEqual({
-			items_fields: ['id'],
-			include_inventory_count: true,
-			include_calculated_price: false
-		})
-	})
-
-	it('should accept empty object', () => {
-		const result = RetrieveWishlistQuerySchema.safeParse({})
-		expect(result.success).toBe(true)
-	})
-
-	it('should reject non-boolean include_inventory_count', () => {
-		const result = RetrieveWishlistQuerySchema.safeParse({include_inventory_count: 'yes'})
-		expect(result.success).toBe(false)
-	})
-})
-
-describe('AddItemToWishlistRequestSchema', () => {
+describe('AddWishlistItemRequestSchema', () => {
 	it('should accept valid product_id', () => {
-		const result = AddItemToWishlistRequestSchema.safeParse({product_id: 'variant_123'})
+		const result = AddWishlistItemRequestSchema.safeParse({product_id: 'prod_123'})
 		expect(result.success).toBe(true)
-		expect(result.data).toEqual({product_id: 'variant_123'})
+		expect(result.data).toEqual({product_id: 'prod_123'})
 	})
 
 	it('should reject missing product_id', () => {
-		const result = AddItemToWishlistRequestSchema.safeParse({})
+		const result = AddWishlistItemRequestSchema.safeParse({})
 		expect(result.success).toBe(false)
 	})
 
 	it('should reject non-string product_id', () => {
-		const result = AddItemToWishlistRequestSchema.safeParse({product_id: 123})
+		const result = AddWishlistItemRequestSchema.safeParse({product_id: 123})
 		expect(result.success).toBe(false)
 	})
 })
