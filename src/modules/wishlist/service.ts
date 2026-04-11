@@ -48,6 +48,23 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 		return parseInt(result.rows?.[0]?.count || '0', 10)
 	}
 
+	async getWishlistCountsOfProductVariant(productVariantId: string): Promise<number> {
+		const knex = (this as Record<string, any>).__container__?.['__pg_connection__']
+		if (!knex) {
+			return 0
+		}
+
+		const result = await knex.raw(
+			`SELECT COUNT(DISTINCT wi.wishlist_id) as count
+			 FROM wishlist_item wi
+			 INNER JOIN wishlist w ON wi.wishlist_id = w.id AND w.deleted_at IS NULL
+			 WHERE wi.product_variant_id = ? AND wi.deleted_at IS NULL`,
+			[productVariantId]
+		)
+
+		return parseInt(result.rows?.[0]?.count || '0', 10)
+	}
+
 	async getItemsCountByWishlistIds(wishlistIds: Array<string>): Promise<Record<string, number>> {
 		if (wishlistIds.length === 0) {
 			return {}

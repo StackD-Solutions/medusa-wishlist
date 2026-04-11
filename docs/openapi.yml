@@ -268,6 +268,30 @@ paths:
        schema:
         $ref: '#/components/schemas/Error'
 
+ /admin/products/{product_id}/variants/{variant_id}/wishlist:
+  get:
+   summary: Get variant wishlist count
+   description: Returns the number of wishlists containing a specific product variant (admin only)
+   operationId: getVariantWishlistCount
+   tags:
+    - Admin
+   parameters:
+    - $ref: '#/components/parameters/ProductId'
+    - $ref: '#/components/parameters/VariantId'
+   responses:
+    '200':
+     description: Wishlist count for the variant
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/ProductWishlistCountResponse'
+    '401':
+     description: Unauthorized
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/Error'
+
 components:
  parameters:
   WishlistId:
@@ -278,6 +302,12 @@ components:
     type: string
   ProductId:
    name: product_id
+   in: path
+   required: true
+   schema:
+    type: string
+  VariantId:
+   name: variant_id
    in: path
    required: true
    schema:

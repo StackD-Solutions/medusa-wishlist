@@ -15,6 +15,7 @@ export default defineMiddlewares({
 		{matcher: '/store/wishlists/:id/items', method: 'POST', middlewares: [customerAuth, validateAndTransformBody(AddWishlistItemRequestSchema)]},
 		{matcher: '/store/wishlists/:id/items/:product_variant_id', method: 'DELETE', middlewares: [customerAuth]},
 		// Admin
-		{matcher: '/admin/products/:product_id/wishlist', method: 'GET', middlewares: [authenticate('user', ['session', 'bearer'])]}
+		{matcher: '/admin/products/:product_id/wishlist', method: 'GET', middlewares: [authenticate('user', ['session', 'bearer'])]},
+		{matcher: '/admin/products/:product_id/variants/:variant_id/wishlist', method: 'GET', middlewares: [authenticate('user', ['session', 'bearer'])]}
 	]
 })

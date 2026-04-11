@@ -69,17 +69,18 @@ npx medusa db:migrate
 
 ## API Endpoints
 
-| Method | Endpoint                                         | Scope | Auth | Description                             |
-| ------ | ------------------------------------------------ | ----- | ---- | --------------------------------------- |
-| GET    | `/store/wishlists`                               | Store | ✅   | List wishlists for the current customer |
-| POST   | `/store/wishlists`                               | Store | ✅   | Create a new wishlist                   |
-| GET    | `/store/wishlists/:id`                           | Store | ⚠️   | Retrieve a wishlist by ID               |
-| PUT    | `/store/wishlists/:id`                           | Store | ✅   | Update wishlist metadata and visibility |
-| DELETE | `/store/wishlists/:id`                           | Store | ✅   | Delete a wishlist                       |
-| GET    | `/store/wishlists/:id/items`                     | Store | ⚠️   | Get items in a wishlist                 |
-| POST   | `/store/wishlists/:id/items`                     | Store | ✅   | Add an item to the wishlist             |
-| DELETE | `/store/wishlists/:id/items/:product_variant_id` | Store | ✅   | Remove an item from the wishlist        |
-| GET    | `/admin/products/:product_id/wishlist`           | Admin | ✅   | Get wishlist count for a product        |
+| Method | Endpoint                                                    | Scope | Auth | Description                              |
+| ------ |-------------------------------------------------------------| ----- | ---- |------------------------------------------|
+| GET    | `/store/wishlists`                                          | Store | ✅   | List wishlists for the current customer  |
+| POST   | `/store/wishlists`                                          | Store | ✅   | Create a new wishlist                    |
+| GET    | `/store/wishlists/:id`                                      | Store | ⚠️   | Retrieve a wishlist by ID                |
+| PUT    | `/store/wishlists/:id`                                      | Store | ✅   | Update wishlist metadata and visibility  |
+| DELETE | `/store/wishlists/:id`                                      | Store | ✅   | Delete a wishlist                        |
+| GET    | `/store/wishlists/:id/items`                                | Store | ⚠️   | Get items in a wishlist                  |
+| POST   | `/store/wishlists/:id/items`                                | Store | ✅   | Add an item to the wishlist              |
+| DELETE | `/store/wishlists/:id/items/:product_variant_id`            | Store | ✅   | Remove an item from the wishlist         |
+| GET    | `/admin/products/:product_id/wishlist`                      | Admin | ✅   | Get wishlist count for a product         |
+| GET    | `/admin/products/:product_id/variants/:variant_id/wishlist` | Admin | ✅   | Get wishlist count for a product variant |
 
 ✅ = Requires authentication. ⚠️ = Public wishlists can be accessed without authentication.
 

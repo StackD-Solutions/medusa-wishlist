@@ -320,6 +320,33 @@
 							}
 						]
 					}
+				},
+				{
+					"name": "Get variant wishlist count",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/admin/products/:product_id/variants/:variant_id/wishlist",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "products", ":product_id", "variants", ":variant_id", "wishlist"],
+							"variable": [
+								{
+									"key": "product_id",
+									"value": "<product_id>"
+								},
+								{
+									"key": "variant_id",
+									"value": "<variant_id>"
+								}
+							]
+						},
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						]
+					}
 				}
 			]
 		}
