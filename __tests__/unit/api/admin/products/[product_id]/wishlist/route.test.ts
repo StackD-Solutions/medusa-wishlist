@@ -2,7 +2,9 @@ import {WISHLIST_MODULE} from '../../../../../../../src/modules/wishlist'
 import {GET} from '../../../../../../../src/api/admin/products/[product_id]/wishlist/route'
 import {createMockRequest, createMockResponse, createMockWishlistService} from '../../../../../helpers/mock-route'
 
-const setup = (opts: {params?: Record<string, string>} = {}): {
+const setup = (
+	opts: {params?: Record<string, string>} = {}
+): {
 	req: any
 	res: ReturnType<typeof createMockResponse>
 	wishlistService: ReturnType<typeof createMockWishlistService>

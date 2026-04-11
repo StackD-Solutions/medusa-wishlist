@@ -8,6 +8,7 @@ export type MockResponse = {
 
 export type MockWishlistService = {
 	maxWishlistNameLength: number
+	defaultPageSize: number
 	retrieveWishlist: jest.Mock
 	listAndCountWishlists: jest.Mock
 	createWishlists: jest.Mock
@@ -22,7 +23,7 @@ export type MockWishlistService = {
 }
 
 export type MockProductService = {
-	retrieveProduct: jest.Mock
+	retrieveProductVariant: jest.Mock
 }
 
 export const createMockResponse = (): MockResponse => {
@@ -33,6 +34,7 @@ export const createMockResponse = (): MockResponse => {
 
 export const createMockWishlistService = (overrides?: Partial<MockWishlistService>): MockWishlistService => ({
 	maxWishlistNameLength: 40,
+	defaultPageSize: 10,
 	retrieveWishlist: jest.fn(),
 	listAndCountWishlists: jest.fn(),
 	createWishlists: jest.fn(),
@@ -48,7 +50,7 @@ export const createMockWishlistService = (overrides?: Partial<MockWishlistServic
 })
 
 export const createMockProductService = (): MockProductService => ({
-	retrieveProduct: jest.fn()
+	retrieveProductVariant: jest.fn()
 })
 
 export const createMockRequest = (opts: {

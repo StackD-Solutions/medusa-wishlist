@@ -74,19 +74,19 @@ describe('UpdateWishlistRequestSchema', () => {
 })
 
 describe('AddWishlistItemRequestSchema', () => {
-	it('should accept valid product_id', () => {
-		const result = AddWishlistItemRequestSchema.safeParse({product_id: 'prod_123'})
+	it('should accept valid product_variant_id', () => {
+		const result = AddWishlistItemRequestSchema.safeParse({product_variant_id: 'variant_123'})
 		expect(result.success).toBe(true)
-		expect(result.data).toEqual({product_id: 'prod_123'})
+		expect(result.data).toEqual({product_variant_id: 'variant_123'})
 	})
 
-	it('should reject missing product_id', () => {
+	it('should reject missing product_variant_id', () => {
 		const result = AddWishlistItemRequestSchema.safeParse({})
 		expect(result.success).toBe(false)
 	})
 
-	it('should reject non-string product_id', () => {
-		const result = AddWishlistItemRequestSchema.safeParse({product_id: 123})
+	it('should reject non-string product_variant_id', () => {
+		const result = AddWishlistItemRequestSchema.safeParse({product_variant_id: 123})
 		expect(result.success).toBe(false)
 	})
 })

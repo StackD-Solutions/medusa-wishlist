@@ -9,7 +9,7 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 
-	const limit = parseInt(req.query.limit as string) || 10
+	const limit = parseInt(req.query.limit as string) || wishlistService.defaultPageSize
 	const offset = parseInt(req.query.offset as string) || 0
 
 	const [wishlists, totalCount] = await wishlistService.listAndCountWishlists(
@@ -17,11 +17,11 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 		{order: {created_at: 'DESC'}, take: limit, skip: offset}
 	)
 
-	const itemsCounts = await wishlistService.getItemsCountByWishlistIds(wishlists.map((w) => w.id))
+	const itemsCounts = await wishlistService.getItemsCountByWishlistIds(wishlists.map(w => w.id))
 
 	return res.status(200).json(
 		buildPaginatedResponse(
-			wishlists.map((w) => ({...w, items_count: itemsCounts[w.id] || 0})),
+			wishlists.map(wistlist => ({...wistlist, items_count: itemsCounts[wistlist.id] || 0})),
 			totalCount,
 			offset,
 			limit

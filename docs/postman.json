@@ -244,7 +244,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"product_id\": \"<product_id>\"\n}"
+							"raw": "{\n  \"product_variant_id\": \"<product_variant_id>\"\n}"
 						}
 					}
 				},
@@ -253,17 +253,17 @@
 					"request": {
 						"method": "DELETE",
 						"url": {
-							"raw": "{{base_url}}/store/wishlists/:id/items/:product_id",
+							"raw": "{{base_url}}/store/wishlists/:id/items/:product_variant_id",
 							"host": ["{{base_url}}"],
-							"path": ["store", "wishlists", ":id", "items", ":product_id"],
+							"path": ["store", "wishlists", ":id", "items", ":product_variant_id"],
 							"variable": [
 								{
 									"key": "id",
 									"value": "<wishlist_id>"
 								},
 								{
-									"key": "product_id",
-									"value": "<product_id>"
+									"key": "product_variant_id",
+									"value": "<product_variant_id>"
 								}
 							]
 						},

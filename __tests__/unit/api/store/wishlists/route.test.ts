@@ -2,7 +2,9 @@ import {WISHLIST_MODULE} from '../../../../../src'
 import {GET, POST} from '../../../../../src/api/store/wishlists/route'
 import {createMockRequest, createMockResponse, createMockWishlistService} from '../../../helpers/mock-route'
 
-const setup = (opts: {customerId?: string | null; query?: Record<string, string>; body?: Record<string, unknown>} = {}): {
+const setup = (
+	opts: {customerId?: string | null; query?: Record<string, string>; body?: Record<string, unknown>} = {}
+): {
 	req: any
 	res: ReturnType<typeof createMockResponse>
 	wishlistService: ReturnType<typeof createMockWishlistService>
@@ -21,10 +23,7 @@ const setup = (opts: {customerId?: string | null; query?: Record<string, string>
 describe('GET /store/wishlists', () => {
 	it('should return paginated wishlists with items count', async () => {
 		const {req, res, wishlistService} = setup({query: {limit: '5', offset: '0'}})
-		wishlistService.listAndCountWishlists.mockResolvedValue([
-			[{id: 'wl_1', name: 'My List'}],
-			1
-		])
+		wishlistService.listAndCountWishlists.mockResolvedValue([[{id: 'wl_1', name: 'My List'}], 1])
 		wishlistService.getItemsCountByWishlistIds.mockResolvedValue({wl_1: 3})
 
 		await GET(req, res)
@@ -42,18 +41,12 @@ describe('GET /store/wishlists', () => {
 
 		await GET(req, res)
 
-		expect(wishlistService.listAndCountWishlists).toHaveBeenCalledWith(
-			{customer_id: 'cust_1'},
-			{order: {created_at: 'DESC'}, take: 10, skip: 0}
-		)
+		expect(wishlistService.listAndCountWishlists).toHaveBeenCalledWith({customer_id: 'cust_1'}, {order: {created_at: 'DESC'}, take: 10, skip: 0})
 	})
 
 	it('should default items_count to 0 when no items', async () => {
 		const {req, res, wishlistService} = setup()
-		wishlistService.listAndCountWishlists.mockResolvedValue([
-			[{id: 'wl_1', name: 'Empty'}],
-			1
-		])
+		wishlistService.listAndCountWishlists.mockResolvedValue([[{id: 'wl_1', name: 'Empty'}], 1])
 		wishlistService.getItemsCountByWishlistIds.mockResolvedValue({})
 
 		await GET(req, res)

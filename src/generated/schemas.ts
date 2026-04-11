@@ -30,7 +30,7 @@ export const DeleteResponse = z.object({id: z.string()})
 export type DeleteResponse = z.infer<typeof DeleteResponse>
 export const WishlistItem = z.object({
 	id: z.string(),
-	product_id: z.string(),
+	product_variant_id: z.string(),
 	wishlist_id: z.string(),
 	created_at: z.string().datetime({offset: true}),
 	updated_at: z.string().datetime({offset: true}),
@@ -39,7 +39,7 @@ export const WishlistItem = z.object({
 export type WishlistItem = z.infer<typeof WishlistItem>
 export const WishlistItemsResponse = z.object({data: z.array(WishlistItem), page: PaginationMetadata})
 export type WishlistItemsResponse = z.infer<typeof WishlistItemsResponse>
-export const AddWishlistItemRequest = z.object({product_id: z.string()})
+export const AddWishlistItemRequest = z.object({product_variant_id: z.string()})
 export type AddWishlistItemRequest = z.infer<typeof AddWishlistItemRequest>
 export const WishlistItemResponse = z.object({data: WishlistItem})
 export type WishlistItemResponse = z.infer<typeof WishlistItemResponse>

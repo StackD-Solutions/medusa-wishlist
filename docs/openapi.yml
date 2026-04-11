@@ -177,7 +177,7 @@ paths:
         $ref: '#/components/schemas/Error'
   post:
    summary: Add item to wishlist
-   description: Adds a product to a wishlist
+   description: Adds a product variant to a wishlist
    operationId: addWishlistItem
    tags:
     - Wishlist Items
@@ -203,7 +203,7 @@ paths:
        schema:
         $ref: '#/components/schemas/Error'
     '404':
-     description: Product not found
+     description: Product variant not found
      content:
       application/json:
        schema:
@@ -215,16 +215,16 @@ paths:
        schema:
         $ref: '#/components/schemas/Error'
 
- /store/wishlists/{id}/items/{product_id}:
+ /store/wishlists/{id}/items/{product_variant_id}:
   delete:
    summary: Remove item from wishlist
-   description: Removes an item from a wishlist by product ID
+   description: Removes an item from a wishlist by product variant ID
    operationId: removeWishlistItem
    tags:
     - Wishlist Items
    parameters:
     - $ref: '#/components/parameters/WishlistId'
-    - $ref: '#/components/parameters/ProductId'
+    - $ref: '#/components/parameters/ProductVariantId'
    responses:
     '200':
      description: Item removed from wishlist
@@ -239,7 +239,7 @@ paths:
        schema:
         $ref: '#/components/schemas/Error'
     '404':
-     description: Wishlist or product not found
+     description: Wishlist or product variant not found
      content:
       application/json:
        schema:
@@ -282,6 +282,12 @@ components:
    required: true
    schema:
     type: string
+  ProductVariantId:
+   name: product_variant_id
+   in: path
+   required: true
+   schema:
+    type: string
   Limit:
    name: limit
    in: query
@@ -296,7 +302,6 @@ components:
     default: 0
 
  schemas:
-
   WishlistListResponse:
    type: object
    required:
@@ -378,14 +383,14 @@ components:
    type: object
    required:
     - id
-    - product_id
+    - product_variant_id
     - wishlist_id
     - created_at
     - updated_at
    properties:
     id:
      type: string
-    product_id:
+    product_variant_id:
      type: string
     wishlist_id:
      type: string
@@ -423,9 +428,9 @@ components:
   AddWishlistItemRequest:
    type: object
    required:
-    - product_id
+    - product_variant_id
    properties:
-    product_id:
+    product_variant_id:
      type: string
 
   ProductWishlistCountResponse:

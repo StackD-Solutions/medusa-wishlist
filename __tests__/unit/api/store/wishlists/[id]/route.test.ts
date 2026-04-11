@@ -11,11 +11,13 @@ const WISHLIST = {
 	visibility: WishlistVisibility.PRIVATE
 }
 
-const setup = (opts: {
-	customerId?: string | null
-	params?: Record<string, string>
-	body?: Record<string, unknown>
-} = {}): {
+const setup = (
+	opts: {
+		customerId?: string | null
+		params?: Record<string, string>
+		body?: Record<string, unknown>
+	} = {}
+): {
 	req: any
 	res: ReturnType<typeof createMockResponse>
 	wishlistService: ReturnType<typeof createMockWishlistService>

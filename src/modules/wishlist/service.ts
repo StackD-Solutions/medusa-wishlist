@@ -4,7 +4,8 @@ import Wishlist from './models/wishlist'
 import WishlistItem from './models/wishlist-item'
 
 const PluginOptionsSchema = z.object({
-	maxWishlistNameLength: z.number().default(40)
+	maxWishlistNameLength: z.number().default(40),
+	defaultPageSize: z.number().default(10)
 })
 
 export type WishlistPluginOptions = z.infer<typeof PluginOptionsSchema>
@@ -25,6 +26,10 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 		return this.pluginOptions_.maxWishlistNameLength
 	}
 
+	get defaultPageSize(): number {
+		return this.pluginOptions_.defaultPageSize
+	}
+
 	async getWishlistCountsOfProduct(productId: string): Promise<number> {
 		const knex = (this as Record<string, any>).__container__?.['__pg_connection__']
 		if (!knex) {
@@ -35,7 +40,8 @@ class WishlistModuleService extends MedusaService({Wishlist, WishlistItem}) {
 			`SELECT COUNT(DISTINCT wi.wishlist_id) as count
 			 FROM wishlist_item wi
 			 INNER JOIN wishlist w ON wi.wishlist_id = w.id AND w.deleted_at IS NULL
-			 WHERE wi.product_id = ? AND wi.deleted_at IS NULL`,
+			 INNER JOIN product_variant pv ON wi.product_variant_id = pv.id
+			 WHERE pv.product_id = ? AND wi.deleted_at IS NULL`,
 			[productId]
 		)
 

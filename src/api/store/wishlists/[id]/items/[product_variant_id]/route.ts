@@ -5,7 +5,7 @@ import {buildDeleteResponse} from '../../../../../../utils/default-response'
 import {requireCustomerId} from '../../../../../../utils/utils'
 
 export const DELETE = async (req: AuthenticatedMedusaRequest, res: MedusaResponse): Promise<MedusaResponse> => {
-	const {id, product_id} = req.params
+	const {id, product_variant_id} = req.params
 	const customerId = requireCustomerId(req)
 	const wishlistService: WishlistModuleService = req.scope.resolve(WISHLIST_MODULE)
 
@@ -14,9 +14,9 @@ export const DELETE = async (req: AuthenticatedMedusaRequest, res: MedusaRespons
 		return res.status(404).json({message: 'Wishlist not found'})
 	}
 
-	const [item] = await wishlistService.listWishlistItems({wishlist_id: id, product_id})
+	const [item] = await wishlistService.listWishlistItems({wishlist_id: id, product_variant_id})
 	if (!item) {
-		return res.status(404).json({message: `Product "${product_id}" not found in wishlist`})
+		return res.status(404).json({message: `Product variant "${product_variant_id}" not found in wishlist`})
 	}
 
 	await wishlistService.deleteWishlistItems(item.id)
