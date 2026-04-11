@@ -102,6 +102,18 @@ describe('PUT /store/wishlists/:id', () => {
 		expect(res.json).toHaveBeenCalledWith({data: {...updated, items_count: 1}})
 	})
 
+	it('should default items_count to 0', async () => {
+		const updated = {...WISHLIST, name: 'Renamed'}
+		const {req, res, wishlistService} = setup({body: {name: 'Renamed'}})
+		wishlistService.retrieveWishlist.mockResolvedValue(WISHLIST)
+		wishlistService.updateWishlists.mockResolvedValue(updated)
+		wishlistService.getItemsCountByWishlistIds.mockResolvedValue({})
+
+		await PUT(req, res)
+
+		expect(res.json).toHaveBeenCalledWith({data: {...updated, items_count: 0}})
+	})
+
 	it('should return 404 when wishlist belongs to another customer', async () => {
 		const {req, res, wishlistService} = setup({customerId: 'other_cust', body: {name: 'X'}})
 		wishlistService.retrieveWishlist.mockResolvedValue(WISHLIST)
