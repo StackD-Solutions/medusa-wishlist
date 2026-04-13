@@ -1,6 +1,6 @@
 {
 	"name": "@stackd-solutions/medusa-wishlist",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"description": "Wishlist plugin for Medusa",
 	"author": "StackD Solutions (https://stackd-solutions.io)",
 	"license": "Apache-2.0",
