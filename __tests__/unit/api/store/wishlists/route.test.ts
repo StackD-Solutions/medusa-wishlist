@@ -58,6 +58,72 @@ describe('GET /store/wishlists', () => {
 		)
 	})
 
+	it('should filter by name', async () => {
+		const {req, res, wishlistService} = setup({query: {name: 'Favorites'}})
+		wishlistService.listAndCountWishlists.mockResolvedValue([[{id: 'wl_1', name: 'Favorites'}], 1])
+		wishlistService.getItemsCountByWishlistIds.mockResolvedValue({wl_1: 2})
+
+		await GET(req, res)
+
+		expect(wishlistService.listAndCountWishlists).toHaveBeenCalledWith(
+			{customer_id: 'cust_1', name: 'Favorites'},
+			expect.any(Object)
+		)
+	})
+
+	it('should filter by sales_channel_id', async () => {
+		const {req, res, wishlistService} = setup({query: {sales_channel_id: 'sc_1'}})
+		wishlistService.listAndCountWishlists.mockResolvedValue([[], 0])
+
+		await GET(req, res)
+
+		expect(wishlistService.listAndCountWishlists).toHaveBeenCalledWith(
+			{customer_id: 'cust_1', sales_channel_id: 'sc_1'},
+			expect.any(Object)
+		)
+	})
+
+	it('should filter by visibility', async () => {
+		const {req, res, wishlistService} = setup({query: {visibility: 'public'}})
+		wishlistService.listAndCountWishlists.mockResolvedValue([[], 0])
+
+		await GET(req, res)
+
+		expect(wishlistService.listAndCountWishlists).toHaveBeenCalledWith(
+			{customer_id: 'cust_1', visibility: 'public'},
+			expect.any(Object)
+		)
+	})
+
+	it('should filter by product_variant_id', async () => {
+		const {req, res, wishlistService} = setup({query: {product_variant_id: 'variant_1'}})
+		wishlistService.getWishlistIdsByProductVariantId.mockResolvedValue(['wl_1', 'wl_2'])
+		wishlistService.listAndCountWishlists.mockResolvedValue([[{id: 'wl_1'}, {id: 'wl_2'}], 2])
+		wishlistService.getItemsCountByWishlistIds.mockResolvedValue({wl_1: 1, wl_2: 3})
+
+		await GET(req, res)
+
+		expect(wishlistService.getWishlistIdsByProductVariantId).toHaveBeenCalledWith('variant_1', 'cust_1')
+		expect(wishlistService.listAndCountWishlists).toHaveBeenCalledWith(
+			{customer_id: 'cust_1', id: ['wl_1', 'wl_2']},
+			expect.any(Object)
+		)
+	})
+
+	it('should return empty when product_variant_id matches no wishlists', async () => {
+		const {req, res, wishlistService} = setup({query: {product_variant_id: 'variant_none'}})
+		wishlistService.getWishlistIdsByProductVariantId.mockResolvedValue([])
+
+		await GET(req, res)
+
+		expect(wishlistService.listAndCountWishlists).not.toHaveBeenCalled()
+		expect(res.status).toHaveBeenCalledWith(200)
+		expect(res.json).toHaveBeenCalledWith({
+			data: [],
+			page: {offset: 0, limit: 10, count: 0}
+		})
+	})
+
 	it('should throw when not authenticated', async () => {
 		const {req, res} = setup({customerId: null})
 

@@ -17,6 +17,10 @@ paths:
    parameters:
     - $ref: '#/components/parameters/Limit'
     - $ref: '#/components/parameters/Offset'
+    - $ref: '#/components/parameters/FilterName'
+    - $ref: '#/components/parameters/FilterSalesChannelId'
+    - $ref: '#/components/parameters/FilterVisibility'
+    - $ref: '#/components/parameters/FilterProductVariantId'
    responses:
     '200':
      description: Paginated list of wishlists
@@ -162,6 +166,7 @@ paths:
     - $ref: '#/components/parameters/WishlistId'
     - $ref: '#/components/parameters/Limit'
     - $ref: '#/components/parameters/Offset'
+    - $ref: '#/components/parameters/FilterProductVariantId'
    responses:
     '200':
      description: Paginated list of wishlist items
@@ -330,6 +335,30 @@ components:
    schema:
     type: integer
     default: 0
+  FilterName:
+   name: name
+   in: query
+   description: Filter wishlists by name
+   schema:
+    type: string
+  FilterSalesChannelId:
+   name: sales_channel_id
+   in: query
+   description: Filter wishlists by sales channel
+   schema:
+    type: string
+  FilterVisibility:
+   name: visibility
+   in: query
+   description: Filter wishlists by visibility
+   schema:
+    $ref: '#/components/schemas/WishlistVisibility'
+  FilterProductVariantId:
+   name: product_variant_id
+   in: query
+   description: Filter wishlists containing a specific product variant
+   schema:
+    type: string
 
  schemas:
   WishlistListResponse:

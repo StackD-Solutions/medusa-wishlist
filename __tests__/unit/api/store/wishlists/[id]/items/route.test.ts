@@ -86,6 +86,39 @@ describe('GET /store/wishlists/:id/items', () => {
 
 		expect(wishlistService.listWishlistItems).toHaveBeenCalledWith({wishlist_id: 'wl_1'}, {take: 10, skip: 0})
 	})
+
+	it('should filter by product_variant_id', async () => {
+		const items = [{id: 'wi_1', product_variant_id: 'variant_1', wishlist_id: 'wl_1'}]
+		const {req, res, wishlistService} = setup({query: {product_variant_id: 'variant_1'}})
+		wishlistService.retrieveWishlist.mockResolvedValue(WISHLIST)
+		wishlistService.listWishlistItems.mockResolvedValue(items)
+		wishlistService.listAndCountWishlistItems.mockResolvedValue([items, 1])
+
+		await GET(req, res)
+
+		expect(wishlistService.listWishlistItems).toHaveBeenCalledWith(
+			{wishlist_id: 'wl_1', product_variant_id: 'variant_1'},
+			expect.any(Object)
+		)
+		expect(wishlistService.listAndCountWishlistItems).toHaveBeenCalledWith(
+			{wishlist_id: 'wl_1', product_variant_id: 'variant_1'}
+		)
+	})
+
+	it('should return empty when product_variant_id matches no items', async () => {
+		const {req, res, wishlistService} = setup({query: {product_variant_id: 'variant_none'}})
+		wishlistService.retrieveWishlist.mockResolvedValue(WISHLIST)
+		wishlistService.listWishlistItems.mockResolvedValue([])
+		wishlistService.listAndCountWishlistItems.mockResolvedValue([[], 0])
+
+		await GET(req, res)
+
+		expect(res.status).toHaveBeenCalledWith(200)
+		expect(res.json).toHaveBeenCalledWith({
+			data: [],
+			page: {offset: 0, limit: 10, count: 0}
+		})
+	})
 })
 
 describe('POST /store/wishlists/:id/items', () => {

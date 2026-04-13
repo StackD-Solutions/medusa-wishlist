@@ -71,7 +71,7 @@ npx medusa db:migrate
 
 | Method | Endpoint                                                    | Scope | Auth | Description                              |
 | ------ |-------------------------------------------------------------| ----- | ---- |------------------------------------------|
-| GET    | `/store/wishlists`                                          | Store | ✅   | List wishlists for the current customer  |
+| GET    | `/store/wishlists`                                          | Store | ✅   | List wishlists                           |
 | POST   | `/store/wishlists`                                          | Store | ✅   | Create a new wishlist                    |
 | GET    | `/store/wishlists/:id`                                      | Store | ⚠️   | Retrieve a wishlist by ID                |
 | PUT    | `/store/wishlists/:id`                                      | Store | ✅   | Update wishlist metadata and visibility  |
@@ -84,9 +84,38 @@ npx medusa db:migrate
 
 ✅ = Requires authentication. ⚠️ = Public wishlists can be accessed without authentication.
 
-## Admin Widget
+### Filtering Wishlists
 
-The plugin adds a widget to the **product detail page** in the Medusa Admin dashboard. It displays how many wishlists contain the product.
+The `GET /store/wishlists` endpoint supports the following query parameters for filtering:
+
+| Parameter            | Type     | Description                                        |
+| -------------------- | -------- | -------------------------------------------------- |
+| `name`               | `string` | Filter by wishlist name                            |
+| `sales_channel_id`   | `string` | Filter by sales channel                            |
+| `visibility`         | `string` | Filter by visibility (`private` or `public`)       |
+| `product_variant_id` | `string` | Filter wishlists containing a specific variant     |
+
+Example: `GET /store/wishlists?product_variant_id=variant_123` returns only wishlists that contain that variant.
+
+### Filtering Wishlist Items
+
+The `GET /store/wishlists/:id/items` endpoint supports the following query parameters for filtering:
+
+| Parameter            | Type     | Description                                    |
+| -------------------- | -------- | ---------------------------------------------- |
+| `product_variant_id` | `string` | Filter items by a specific product variant     |
+
+Example: `GET /store/wishlists/wl_123/items?product_variant_id=variant_123&limit=1` checks if a variant exists in the wishlist.
+
+## Admin Widgets
+
+### Product Widget
+
+Adds a widget to the **product detail page** (`product.details.before`) showing how many wishlists contain the product across all variants.
+
+### Variant Widget
+
+Adds a widget to the **product variant detail page** (`product_variant.details.before`) showing how many wishlists contain that specific variant.
 
 ## Build
 

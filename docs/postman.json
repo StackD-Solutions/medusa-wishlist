@@ -37,6 +37,26 @@
 								{
 									"key": "offset",
 									"value": "0"
+								},
+								{
+									"key": "name",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sales_channel_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "visibility",
+									"value": "private",
+									"disabled": true
+								},
+								{
+									"key": "product_variant_id",
+									"value": "",
+									"disabled": true
 								}
 							]
 						},
@@ -196,6 +216,11 @@
 								{
 									"key": "offset",
 									"value": "0"
+								},
+								{
+									"key": "product_variant_id",
+									"value": "",
+									"disabled": true
 								}
 							],
 							"variable": [

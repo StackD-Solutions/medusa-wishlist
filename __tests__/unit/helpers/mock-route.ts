@@ -19,6 +19,7 @@ export type MockWishlistService = {
 	createWishlistItems: jest.Mock
 	deleteWishlistItems: jest.Mock
 	getItemsCountByWishlistIds: jest.Mock
+	getWishlistIdsByProductVariantId: jest.Mock
 	getWishlistCountsOfProduct: jest.Mock
 	getWishlistCountsOfProductVariant: jest.Mock
 }
@@ -46,6 +47,7 @@ export const createMockWishlistService = (overrides?: Partial<MockWishlistServic
 	createWishlistItems: jest.fn(),
 	deleteWishlistItems: jest.fn(),
 	getItemsCountByWishlistIds: jest.fn().mockResolvedValue({}),
+	getWishlistIdsByProductVariantId: jest.fn().mockResolvedValue([]),
 	getWishlistCountsOfProduct: jest.fn(),
 	getWishlistCountsOfProductVariant: jest.fn(),
 	...overrides

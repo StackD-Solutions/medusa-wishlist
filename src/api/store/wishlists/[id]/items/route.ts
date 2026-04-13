@@ -21,9 +21,15 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse): Promise<Medu
 	const limit = parseInt(req.query.limit as string) || wishlistService.defaultPageSize
 	const offset = parseInt(req.query.offset as string) || 0
 
-	const items = await wishlistService.listWishlistItems({wishlist_id: id}, {take: limit, skip: offset})
+	const filters: Record<string, unknown> = {wishlist_id: id}
 
-	const [, count] = await wishlistService.listAndCountWishlistItems({wishlist_id: id})
+	if (req.query.product_variant_id) {
+		filters.product_variant_id = req.query.product_variant_id
+	}
+
+	const items = await wishlistService.listWishlistItems(filters, {take: limit, skip: offset})
+
+	const [, count] = await wishlistService.listAndCountWishlistItems(filters)
 
 	return res.status(200).json(buildPaginatedResponse(items, count, offset, limit))
 }

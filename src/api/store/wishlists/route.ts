@@ -12,8 +12,30 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse):
 	const limit = parseInt(req.query.limit as string) || wishlistService.defaultPageSize
 	const offset = parseInt(req.query.offset as string) || 0
 
+	const filters: Record<string, unknown> = {customer_id: customerId}
+
+	if (req.query.name) {
+		filters.name = req.query.name
+	}
+	if (req.query.sales_channel_id) {
+		filters.sales_channel_id = req.query.sales_channel_id
+	}
+	if (req.query.visibility) {
+		filters.visibility = req.query.visibility
+	}
+	if (req.query.product_variant_id) {
+		const wishlistIds = await wishlistService.getWishlistIdsByProductVariantId(
+			req.query.product_variant_id as string,
+			customerId
+		)
+		if (wishlistIds.length === 0) {
+			return res.status(200).json(buildPaginatedResponse([], 0, offset, limit))
+		}
+		filters.id = wishlistIds
+	}
+
 	const [wishlists, totalCount] = await wishlistService.listAndCountWishlists(
-		{customer_id: customerId},
+		filters,
 		{order: {created_at: 'DESC'}, take: limit, skip: offset}
 	)
 
